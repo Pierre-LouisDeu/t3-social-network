@@ -13,7 +13,9 @@ export const useLocation = (): UseLocationType => {
     navigator.geolocation.getCurrentPosition(setPosition);
   }, []);
 
-  const apiUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${position?.coords?.latitude}&lon=${position?.coords?.longitude}`;
+  const apiUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${
+    position?.coords?.latitude || ""
+  }&lon=${position?.coords?.longitude || ""}`;
 
   useEffect(() => {
     if (!position) return;
