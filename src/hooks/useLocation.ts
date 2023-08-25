@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
-import { type Address } from "~/server/api/routers/tweet";
+import { type AddressType } from "~/types/commonTypes";
 
 type UseLocationType = {
-  address: Address | null;
+  address: AddressType | null;
 };
 
 export const useLocation = (): UseLocationType => {
   const [position, setPosition] = useState<GeolocationPosition | null>(null);
-  const [address, setAddress] = useState<Address | null>(null);
+  const [address, setAddress] = useState<AddressType | null>(null);
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(setPosition);
@@ -20,7 +20,7 @@ export const useLocation = (): UseLocationType => {
     fetch(apiUrl)
       .then((response) => response.json())
       .then((data) => {
-        const address: Address = {
+        const address: AddressType = {
           latitude: position?.coords?.latitude,
           longitude: position?.coords?.longitude,
           country: data.address.country,

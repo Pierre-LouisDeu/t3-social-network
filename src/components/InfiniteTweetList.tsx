@@ -6,17 +6,7 @@ import { VscHeart, VscHeartFilled } from "react-icons/vsc";
 import { IconHoverEffect } from "./IconHoverEffect";
 import { api } from "~/utils/api";
 import { LoadingSpinner } from "./LoadingSpinner";
-import { type Address } from "~/server/api/routers/tweet";
-
-export type Tweet = {
-  id: string;
-  content: string;
-  createdAt: Date;
-  likeCount: number;
-  likedByMe: boolean;
-  user: { id: string; image: string | null; name: string | null };
-  address: Address;
-};
+import { type Tweet } from "~/types/commonTypes";
 
 type InfiniteTweetListProps = {
   isLoading: boolean;

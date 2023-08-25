@@ -1,7 +1,7 @@
 import { type NextPage } from "next";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
-import { InfiniteTweetList, type Tweet } from "~/components/InfiniteTweetList";
+import { InfiniteTweetList } from "~/components/InfiniteTweetList";
 import { NewTweetForm } from "~/components/NewTweetForm";
 import { api } from "~/utils/api";
 
@@ -49,7 +49,7 @@ function RecentTweets() {
 
   return (
     <InfiniteTweetList
-      tweets={tweets.data?.pages.flatMap((page) => page.tweets) as Tweet[]}
+      tweets={tweets.data?.pages.flatMap((page) => page.tweets)}
       isError={tweets.isError}
       isLoading={tweets.isLoading}
       hasMore={tweets.hasNextPage}
@@ -66,7 +66,7 @@ function FollowingTweets() {
 
   return (
     <InfiniteTweetList
-      tweets={tweets.data?.pages.flatMap((page) => page.tweets) as Tweet[]}
+      tweets={tweets.data?.pages.flatMap((page) => page.tweets)}
       isError={tweets.isError}
       isLoading={tweets.isLoading}
       hasMore={tweets.hasNextPage}

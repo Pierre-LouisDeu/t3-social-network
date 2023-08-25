@@ -2,23 +2,13 @@
 import { Prisma } from "@prisma/client";
 import { inferAsyncReturnType } from "@trpc/server";
 import { z } from "zod";
-
 import {
   createTRPCRouter,
   publicProcedure,
   protectedProcedure,
   createTRPCContext,
 } from "~/server/api/trpc";
-
-const Address = z.object({
-  latitude: z.number().optional(),
-  longitude: z.number().optional(),
-  country: z.string().optional(),
-  town: z.string().optional(),
-  road: z.string().optional(),
-});
-
-export type Address = z.infer<typeof Address>;
+import { Address } from "~/types/commonTypes";
 
 export const tweetRouter = createTRPCRouter({
   infiniteProfileFeed: publicProcedure
