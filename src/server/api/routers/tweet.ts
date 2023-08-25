@@ -10,6 +10,16 @@ import {
   createTRPCContext,
 } from "~/server/api/trpc";
 
+const Address = z.object({
+  latitude: z.number().optional(),
+  longitude: z.number().optional(),
+  country: z.string().optional(),
+  town: z.string().optional(),
+  road: z.string().optional(),
+});
+
+export type Address = z.infer<typeof Address>;
+
 export const tweetRouter = createTRPCRouter({
   infiniteProfileFeed: publicProcedure
     .input(
@@ -54,10 +64,27 @@ export const tweetRouter = createTRPCRouter({
       }
     ),
   create: protectedProcedure
-    .input(z.object({ content: z.string() }))
-    .mutation(async ({ input: { content }, ctx }) => {
+    .input(
+      z.object({
+        content: z.string(),
+        address: Address,
+      })
+    )
+    .mutation(async ({ input: { content, address }, ctx }) => {
       const tweet = await ctx.prisma.tweet.create({
-        data: { content, userId: ctx.session.user.id },
+        data: {
+          content,
+          userId: ctx.session.user.id,
+          address: {
+            create: {
+              latitude: address?.latitude,
+              longitude: address?.longitude,
+              country: address?.country,
+              town: address?.town,
+              road: address?.road,
+            },
+          },
+        },
       });
 
       void ctx.revalidateSSG?.(`/profiles/${ctx.session.user.id}`);
@@ -111,6 +138,9 @@ async function getInfiniteTweets({
       user: {
         select: { name: true, id: true, image: true },
       },
+      address: {
+        select: { country: true, town: true, road: true },
+      },
     },
   });
 
@@ -131,6 +161,7 @@ async function getInfiniteTweets({
         likeCount: tweet._count.likes,
         user: tweet.user,
         likedByMe: tweet.likes?.length > 0,
+        address: tweet.address,
       };
     }),
     nextCursor,

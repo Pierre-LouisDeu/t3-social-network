@@ -17,11 +17,25 @@ model Tweet {
     content   String
     createdAt DateTime @default(now())
 
-    user  User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-    likes Like[]
+    user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    likes   Like[]
+    address Address?
 
     @@unique([createdAt, id])
     @@index([userId])
+}
+
+model Address {
+    tweetId   String
+    latitude  Float?
+    longitude Float?
+    country   String?
+    town      String?
+    road      String?
+    Tweet     Tweet   @relation(fields: [tweetId], references: [id], onDelete: Cascade)
+
+    @@id([tweetId])
+    @@index([tweetId])
 }
 
 model Like {
@@ -76,8 +90,8 @@ model User {
     // Non-necessary for Next auth
     tweets        Tweet[]
     likes         Like[]
-    followers User[]  @relation(name: "Followers")
-    follows   User[]  @relation(name: "Followers")
+    followers     User[]    @relation(name: "Followers")
+    follows       User[]    @relation(name: "Followers")
 }
 
 model VerificationToken {

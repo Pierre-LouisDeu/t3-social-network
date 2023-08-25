@@ -6,14 +6,16 @@ import { VscHeart, VscHeartFilled } from "react-icons/vsc";
 import { IconHoverEffect } from "./IconHoverEffect";
 import { api } from "~/utils/api";
 import { LoadingSpinner } from "./LoadingSpinner";
+import { type Address } from "~/server/api/routers/tweet";
 
-type Tweet = {
+export type Tweet = {
   id: string;
   content: string;
   createdAt: Date;
   likeCount: number;
   likedByMe: boolean;
   user: { id: string; image: string | null; name: string | null };
+  address: Address;
 };
 
 type InfiniteTweetListProps = {
@@ -67,6 +69,7 @@ function TweetCard({
   createdAt,
   likeCount,
   likedByMe,
+  address,
 }: Tweet) {
   const trpcUtils = api.useContext();
   const toggleLike = api.tweet.toggleLike.useMutation({
@@ -132,6 +135,14 @@ function TweetCard({
           <span className="text-gray-500">
             {dateTimeFormatter.format(createdAt)}
           </span>
+          {address && (
+            <>
+              <span className="text-gray-500">-</span>
+              <span className="text-blue-500">
+                {address.road}, {address.town}, {address.country}
+              </span>
+            </>
+          )}
         </div>
         <p className="whitespace-pre-wrap">{content}</p>
         <HeartButton

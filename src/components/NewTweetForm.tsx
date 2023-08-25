@@ -9,6 +9,7 @@ import {
 import { api } from "~/utils/api";
 import { Button } from "./Button";
 import { ProfileImage } from "./ProfileImage";
+import { useLocation } from "~/hooks/useLocation";
 
 function updateTextAreaSize(textArea?: HTMLTextAreaElement) {
   if (textArea == null) return;
@@ -33,6 +34,8 @@ function Form() {
   }, []);
   const trpcUtils = api.useContext();
 
+  const { address } = useLocation();
+
   useLayoutEffect(() => {
     updateTextAreaSize(textAreaRef.current);
   }, [inputValue]);
@@ -55,6 +58,13 @@ function Form() {
             name: session.data.user.name || null,
             image: session.data.user.image || null,
           },
+          address: {
+            latitude: address?.latitude,
+            longitude: address?.longitude,
+            country: address?.country || null,
+            town: address?.town || null,
+            road: address?.road || null,
+          },
         };
 
         return {
@@ -76,7 +86,16 @@ function Form() {
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
 
-    createTweet.mutate({ content: inputValue });
+    createTweet.mutate({
+      content: inputValue,
+      address: {
+        latitude: address?.latitude,
+        longitude: address?.longitude,
+        country: address?.country,
+        town: address?.town,
+        road: address?.road,
+      },
+    });
   }
 
   return (
