@@ -7,6 +7,7 @@ import { IconHoverEffect } from "./IconHoverEffect";
 import { api } from "~/utils/api";
 import { LoadingSpinner } from "./LoadingSpinner";
 import { type Tweet } from "~/types/commonTypes";
+import { useTimeAgo } from "~/hooks/useTimeAgo";
 
 type InfiniteTweetListProps = {
   isLoading: boolean;
@@ -48,10 +49,6 @@ export function InfiniteTweetList({
   );
 }
 
-const dateTimeFormatter = new Intl.DateTimeFormat(undefined, {
-  dateStyle: "short",
-});
-
 function TweetCard({
   id,
   user,
@@ -61,6 +58,7 @@ function TweetCard({
   likedByMe,
   address,
 }: Tweet) {
+  const tweetDate = useTimeAgo(createdAt);
   const trpcUtils = api.useContext();
   const toggleLike = api.tweet.toggleLike.useMutation({
     onSuccess: ({ addedLike }) => {
@@ -122,9 +120,7 @@ function TweetCard({
             {user.name}
           </Link>
           <span className="text-gray-500">-</span>
-          <span className="text-gray-500">
-            {dateTimeFormatter.format(createdAt)}
-          </span>
+          <span className="text-gray-500">{tweetDate}</span>
           {address && (
             <>
               <span className="text-gray-500">-</span>
