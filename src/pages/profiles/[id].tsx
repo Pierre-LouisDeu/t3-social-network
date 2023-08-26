@@ -12,7 +12,7 @@ import Link from "next/link";
 import { IconHoverEffect } from "~/components/IconHoverEffect";
 import { VscArrowLeft } from "react-icons/vsc";
 import { ProfileImage } from "~/components/ProfileImage";
-import { InfiniteTweetList } from "~/components/InfiniteTweetList";
+import { InfiniteTweetList } from "~/components/InfiniteTweetList/InfiniteTweetList";
 import { useSession } from "next-auth/react";
 import { Button } from "~/components/Button";
 
