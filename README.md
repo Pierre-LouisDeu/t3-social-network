@@ -6,4 +6,7 @@
 - [x] Deploy the application on Vercel and the database on PlanetScale
 - [x] Add location to tweets
 - [x] Update the date format of tweets
-- [ ] Add a button to remove tweets
+- [ ] Add a button to delete tweets
+        - [x] Add a button + hook + back to delete tweets
+        - [ ] Refetch tweets after delete
+        - [x] Prevent users from deleting tweets that are not theirs

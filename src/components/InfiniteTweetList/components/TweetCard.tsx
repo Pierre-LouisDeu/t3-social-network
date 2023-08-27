@@ -4,7 +4,9 @@ import { useTimeAgo } from "~/components/InfiniteTweetList/hooks/useTimeAgo";
 import { type Tweet } from "~/types/commonTypes";
 import { HeartButton } from "./HeartButton";
 import { TrashButton } from "./TrashButton";
-import { useToggleLike } from "../hooks/toggleLike";
+import { useToggleLike } from "../hooks/useToggleLike";
+import { useDeleteTweet } from "../hooks/useDeleteTweet";
+import { useSession } from "next-auth/react";
 
 export const TweetCard = ({
   id,
@@ -16,7 +18,9 @@ export const TweetCard = ({
   address,
 }: Tweet) => {
   const tweetDate = useTimeAgo(createdAt);
+  const session = useSession();
   const { handleToggleLike, loadingLikes } = useToggleLike({ id, user });
+  const { handleDeleteTweet } = useDeleteTweet({ id, user });
 
   return (
     <li className="flex gap-4 border-b px-4 py-4">
@@ -50,11 +54,9 @@ export const TweetCard = ({
             likedByMe={likedByMe}
             likeCount={likeCount}
           />
-          <TrashButton
-            onClick={handleToggleLike}
-            isLoading={loadingLikes}
-            likedByMe={likedByMe}
-          />
+          {user.id === session?.data?.user.id && (
+            <TrashButton onClick={handleDeleteTweet} />
+          )}
         </div>
       </div>
     </li>
