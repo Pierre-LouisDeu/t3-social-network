@@ -11,8 +11,8 @@ A basic social network built with the T3 stack using Next.js, NextAuth, Prisma, 
 - [x] Add a button to delete tweets
   - [x] Add a button + hook + back to delete tweets
   - [x] Prevent users from deleting tweets that are not theirs
-  - [ ] Refetch tweets after deleting one
-- [ ] Enable full text search on tweets
+  - [x] Refetch tweets after deleting one
+- [x] Enable full text search on tweets
 - [ ] Error handling (toast + modals)
 - [ ] Add a "Map" menu to the sidebar
 
@@ -21,8 +21,9 @@ A basic social network built with the T3 stack using Next.js, NextAuth, Prisma, 
 - [x] No empty tweets
 - [x] prevent users to add ampty tweets or tweets with more than 280 characters
 
-### CI/CD
+### CI/CD & Tech 
 - [x] Create the repository on GitHub 
 - [x] Create a database on PlanetScale
 - [x] Deploy the application on Vercel 
+- [ ] Add GoogleAuth authentication
 - [ ] Add separate prod/dev databases
