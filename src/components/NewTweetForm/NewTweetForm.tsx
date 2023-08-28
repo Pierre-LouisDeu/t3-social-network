@@ -37,6 +37,8 @@ function Form() {
     updateTextAreaSize(textAreaRef.current);
   }, [inputValue]);
 
+  const validTweet = inputValue.length === 0 || inputValue.length > 280;
+
   if (session.status !== "authenticated") return null;
 
   return (
@@ -55,7 +57,9 @@ function Form() {
           placeholder="What's happening?"
         />
       </div>
-      <Button className="self-end">Tweet</Button>
+      <Button className="self-end" disabled={validTweet}>
+        Tweet
+      </Button>
     </form>
   );
 }

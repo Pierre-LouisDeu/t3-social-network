@@ -18,7 +18,8 @@ A basic social network built with the T3 stack using Next.js, NextAuth, Prisma, 
 
 ### Fix & Refacto
 - [x] Update the date format of tweets
-- [ ] No empty tweets
+- [x] No empty tweets
+- [x] prevent users to add ampty tweets or tweets with more than 280 characters
 
 ### CI/CD
 - [x] Create the repository on GitHub 
