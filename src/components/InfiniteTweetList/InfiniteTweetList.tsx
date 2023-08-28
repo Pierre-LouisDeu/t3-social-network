@@ -36,11 +36,9 @@ export function InfiniteTweetList({
         loader={<LoadingSpinner />}
       >
         {tweets.map((tweet) => {
-          return <TweetCard key={tweet.id} {...tweet} />;
+          return tweet && <TweetCard key={tweet.id} {...tweet} />;
         })}
       </InfiniteScroll>
     </ul>
   );
 }
-
-

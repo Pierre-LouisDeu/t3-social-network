@@ -1,12 +1,27 @@
 # T3 Social Network
 
+## About
+A basic social network built with the T3 stack using Next.js, NextAuth, Prisma, tRCP and Tailwind. This project is based on a tutorial from Web Dev Simplified.
+
 ## ToDo
-- [x] Create a new repository on your GitHub account called `t3-social-network`
-- [x] Create a basic social network using the Next, NextAuth, Prisma, tRCP and Tailwind (with a tutorial of Web Dev Simplified)
-- [x] Deploy the application on Vercel and the database on PlanetScale
+
+### Features 
+- [x] Re-create the application as it is in the tutorial
 - [x] Add location to tweets
+- [x] Add a button to delete tweets
+  - [x] Add a button + hook + back to delete tweets
+  - [x] Prevent users from deleting tweets that are not theirs
+  - [ ] Refetch tweets after deleting one
+- [ ] Enable full text search on tweets
+- [ ] Error handling (toast + modals)
+- [ ] Add a "Map" menu to the sidebar
+
+### Fix & Refacto
 - [x] Update the date format of tweets
-- [ ] Add a button to delete tweets
-        - [x] Add a button + hook + back to delete tweets
-        - [ ] Refetch tweets after delete
-        - [x] Prevent users from deleting tweets that are not theirs
+- [ ] No empty tweets
+
+### CI/CD
+- [x] Create the repository on GitHub 
+- [x] Create a database on PlanetScale
+- [x] Deploy the application on Vercel 
+- [ ] Add separate prod/dev databases

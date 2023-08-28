@@ -92,16 +92,11 @@ export const tweetRouter = createTRPCRouter({
       const data = { tweetId: id, userId: ctx.session.user.id };
 
       if (tweetUserId !== data.userId) {
-        return {
-          deletedTweet: false,
-        };
+        return { deletedTweet: false };
       }
-      await ctx.prisma.tweet.delete({
-        where: { id: data.tweetId },
-      });
-      return {
-        deletedTweet: true,
-      };
+
+      await ctx.prisma.tweet.delete({ where: { id: data.tweetId } });
+      return { deletedTweet: true };
     }),
   toggleLike: protectedProcedure
     .input(z.object({ id: z.string() }))

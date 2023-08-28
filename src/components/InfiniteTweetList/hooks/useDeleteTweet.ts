@@ -9,49 +9,46 @@ type UseToggleLikeProps = {
   };
 };
 
-type UseToggleLikeType = {
+type UseDeleteTweetType = {
   handleDeleteTweet: () => void;
+  loadingLikes: boolean;
 };
 
 export const useDeleteTweet = ({
   id,
   user,
-}: UseToggleLikeProps): UseToggleLikeType => {
+}: UseToggleLikeProps): UseDeleteTweetType => {
   const trpcUtils = api.useContext();
 
   const deleteTweet = api.tweet.delete.useMutation({
-    // onSuccess: ({ id }) => {
-    //   const updateData: Parameters<
-    //     typeof trpcUtils.tweet.infiniteFeed.setInfiniteData
-    //   >[1] = (oldData) => {
-    //     if (oldData == null) return;
+    onSuccess: ({ deletedTweet }) => {
+      const Updater:
+        | Parameters<typeof trpcUtils.tweet.infiniteFeed.setInfiniteData>[1]
+        | null = (oldData) => {
+        if (!deletedTweet) return;
 
-    //     return {
-    //       ...oldData,
-    //       pages: oldData.pages.map((page) => {
-    //         return {
-    //           ...page,
-    //           tweets: page.tweets.map((tweet) => {
-    //             if (tweet.id === id) {
-    //               return null;
-    //             }
-    //           }),
-    //         };
-    //       }),
-    //     };
-    //   };
+        if (!oldData) {
+          return {
+            pages: [],
+            pageParams: [],
+          };
+        }
+        return {
+          ...oldData,
+          pages: oldData.pages.map((page) => ({
+            ...page,
+            tweets: page.tweets.filter((tweet) => tweet.id !== id),
+          })),
+        };
+      };
 
-    //   trpcUtils.tweet.infiniteFeed.setInfiniteData({}, updateData);
-    //   trpcUtils.tweet.infiniteProfileFeed.setInfiniteData(
-    //     { userId: user.id },
-    //     updateData
-    //   );
-    // },
+      trpcUtils.tweet.infiniteFeed.setInfiniteData({}, Updater);
+    },
   });
 
   function handleDeleteTweet() {
     deleteTweet.mutate({ id, tweetUserId: user.id });
   }
 
-  return { handleDeleteTweet };
+  return { handleDeleteTweet, loadingLikes: deleteTweet.isLoading };
 };

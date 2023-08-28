@@ -1,5 +1,5 @@
 import { VscTrash } from "react-icons/vsc";
-import { IconHoverEffect } from "~/components/IconHoverEffect copy";
+import { IconHoverEffect } from "~/components/IconHoverEffect";
 
 type HeartButtonProps = {
   onClick: () => void;

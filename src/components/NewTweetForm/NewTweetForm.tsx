@@ -1,15 +1,9 @@
 import { useSession } from "next-auth/react";
-import {
-  type FormEvent,
-  useCallback,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
-import { api } from "~/utils/api";
-import { Button } from "../Button";
+import { useCallback, useLayoutEffect, useRef, useState } from "react";
+import { useCreateTweet } from "./hooks/useCreateTweet";
 import { ProfileImage } from "../ProfileImage";
-import { useLocation } from "~/components/NewTweetForm/hooks/useLocation";
+import { Button } from "../Button";
+import { useLocation } from "./hooks/useLocation";
 
 function updateTextAreaSize(textArea?: HTMLTextAreaElement) {
   if (textArea == null) return;
@@ -25,82 +19,29 @@ export function NewTweetForm() {
 }
 
 function Form() {
-  const session = useSession();
   const [inputValue, setInputValue] = useState("");
   const textAreaRef = useRef<HTMLTextAreaElement>();
   const inputRef = useCallback((textArea: HTMLTextAreaElement) => {
     updateTextAreaSize(textArea);
     textAreaRef.current = textArea;
   }, []);
-  const trpcUtils = api.useContext();
-
+  const session = useSession();
   const { address } = useLocation();
+  const { handleCreateTweet } = useCreateTweet({
+    address,
+    inputValue,
+    setInputValue,
+  });
 
   useLayoutEffect(() => {
     updateTextAreaSize(textAreaRef.current);
   }, [inputValue]);
 
-  const createTweet = api.tweet.create.useMutation({
-    onSuccess: (newTweet) => {
-      setInputValue("");
-
-      if (session.status !== "authenticated") return;
-
-      trpcUtils.tweet.infiniteFeed.setInfiniteData({}, (oldData) => {
-        if (oldData == null || oldData.pages[0] == null) return;
-
-        const newCacheTweet = {
-          ...newTweet,
-          likeCount: 0,
-          likedByMe: false,
-          user: {
-            id: session.data.user.id,
-            name: session.data.user.name || null,
-            image: session.data.user.image || null,
-          },
-          address: {
-            latitude: address?.latitude,
-            longitude: address?.longitude,
-            country: address?.country || null,
-            town: address?.town || null,
-            road: address?.road || null,
-          },
-        };
-
-        return {
-          ...oldData,
-          pages: [
-            {
-              ...oldData.pages[0],
-              tweets: [newCacheTweet, ...oldData.pages[0].tweets],
-            },
-            ...oldData.pages.slice(1),
-          ],
-        };
-      });
-    },
-  });
-
   if (session.status !== "authenticated") return null;
-
-  function handleSubmit(e: FormEvent) {
-    e.preventDefault();
-
-    createTweet.mutate({
-      content: inputValue,
-      address: {
-        latitude: address?.latitude,
-        longitude: address?.longitude,
-        country: address?.country,
-        town: address?.town,
-        road: address?.road,
-      },
-    });
-  }
 
   return (
     <form
-      onSubmit={handleSubmit}
+      onSubmit={handleCreateTweet}
       className="flex flex-col gap-2 border-b px-4 py-2"
     >
       <div className="flex gap-4">
