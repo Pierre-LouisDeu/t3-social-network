@@ -115,6 +115,18 @@ export const tweetRouter = createTRPCRouter({
         return { addedLike: false };
       }
     }),
+  fullTextSearch: publicProcedure
+    .input(z.object({ query: z.string() }))
+    .query(async ({ input: { query }, ctx }) => {
+      const result = await ctx.prisma.tweet.findMany({
+        where: {
+          content: {
+            search: query,
+          },
+        },
+      });
+      return result;
+    }),
 });
 
 async function getInfiniteTweets({

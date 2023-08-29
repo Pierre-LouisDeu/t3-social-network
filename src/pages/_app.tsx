@@ -22,9 +22,9 @@ const MyApp: AppType<{ session: Session | null }> = ({
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className="container mx-auto flex items-start sm:pr-4">
+      <div className="container mx-auto flex items-start">
         <SideNav />
-        <div className="min-h-screen flex-grow border-x">
+        <div className="sm:mr-48 min-h-screen flex-grow border-x">
           <Component {...pageProps} />
         </div>
       </div>

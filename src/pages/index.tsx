@@ -1,6 +1,7 @@
 import { type NextPage } from "next";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
+import FullTextSearchInput from "~/components/FullTextSearchInut";
 import { InfiniteTweetList } from "~/components/InfiniteTweetList/InfiniteTweetList";
 import { NewTweetForm } from "~/components/NewTweetForm/NewTweetForm";
 import { api } from "~/utils/api";
@@ -35,6 +36,7 @@ const Home: NextPage = () => {
           </div>
         )}
       </header>
+      <FullTextSearchInput />
       <NewTweetForm />
       {selectedTab === "Recent" ? <RecentTweets /> : <FollowingTweets />}
     </>

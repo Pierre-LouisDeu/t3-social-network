@@ -19,7 +19,7 @@ export function NewTweetForm() {
 }
 
 function Form() {
-  const [inputValue, setInputValue] = useState("");
+  const [inputValue, setInputValue] = useState<string>("");
   const textAreaRef = useRef<HTMLTextAreaElement>();
   const inputRef = useCallback((textArea: HTMLTextAreaElement) => {
     updateTextAreaSize(textArea);
@@ -44,17 +44,19 @@ function Form() {
   return (
     <form
       onSubmit={handleCreateTweet}
-      className="flex flex-col gap-2 border-b px-4 py-2"
+      className="flex flex-col gap-2 border-y px-4 py-2"
     >
       <div className="flex gap-4">
         <ProfileImage src={session.data.user.image} />
         <textarea
+          id="comment"
+          name="comment"
           ref={inputRef}
           style={{ height: 0 }}
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
-          className="flex-grow resize-none overflow-hidden p-4 text-lg outline-none"
-          placeholder="What's happening?"
+          className="flex-grow resize-none overflow-hidden border-0 border-transparent p-4 text-lg focus:ring-0"
+          placeholder="What's happening ?"
         />
       </div>
       <Button className="self-end" disabled={validTweet}>

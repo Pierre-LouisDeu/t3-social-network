@@ -13,6 +13,8 @@ A basic social network built with the T3 stack using Next.js, NextAuth, Prisma, 
   - [x] Prevent users from deleting tweets that are not theirs
   - [x] Refetch tweets after deleting one
 - [x] Enable full text search on tweets
+- [ ] Add classic auth (email + password)
+- [ ] Add emojis to tweets reactions
 - [ ] Error handling (toast + modals)
 - [ ] Add a "Map" menu to the sidebar
 
@@ -20,6 +22,7 @@ A basic social network built with the T3 stack using Next.js, NextAuth, Prisma, 
 - [x] Update the date format of tweets
 - [x] No empty tweets
 - [x] prevent users to add ampty tweets or tweets with more than 280 characters
+- [ ] Put the search button in the profile menu only + add counter 
 
 ### CI/CD & Tech 
 - [x] Create the repository on GitHub 

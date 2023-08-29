@@ -24,6 +24,7 @@ model Tweet {
 
     @@unique([createdAt, id])
     @@index([userId])
+    @@fulltext([content])
 }
 
 model Address {
