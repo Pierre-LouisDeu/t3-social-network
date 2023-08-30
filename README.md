@@ -13,9 +13,11 @@ A basic social network built with the T3 stack using Next.js, NextAuth, Prisma, 
   - [x] Prevent users from deleting tweets that are not theirs
   - [x] Refetch tweets after deleting one
 - [x] Enable full text search on tweets
-- [ ] Add classic auth (email + password)
+- [x] Error handling (toast + modals)
+- [ ] Add skeleton loading
+- [ ] Create login page and add classic auth (email + password)
+- [ ] Add image upload to tweets
 - [ ] Add emojis to tweets reactions
-- [ ] Error handling (toast + modals)
 - [ ] Add a "Map" menu to the sidebar
 
 ### Fix & Refacto

@@ -56,7 +56,7 @@ function Form() {
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           className="flex-grow resize-none overflow-hidden border-0 border-transparent p-4 text-lg focus:ring-0"
-          placeholder="What's happening ?"
+          placeholder="What's happening?"
         />
       </div>
       <Button className="self-end" disabled={validTweet}>
