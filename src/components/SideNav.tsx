@@ -9,11 +9,9 @@ import {
 } from "react-icons/vsc";
 
 import { IconHoverEffect } from "./IconHoverEffect";
-import { useState } from "react";
 import FullTextSearchInput from "./FullTextSearchInut";
 
 export function SideNav() {
-  const [openModal, setOpenModal] = useState<boolean>(false);
   const session = useSession();
   const user = session.data?.user;
 
@@ -21,16 +19,11 @@ export function SideNav() {
     <nav className="sticky top-0 px-8 py-4">
       <ul className="flex flex-col items-start gap-2 whitespace-nowrap">
         <li>
-          <FullTextSearchInput openModal={openModal} />
           <IconHoverEffect>
             <span className="flex items-center gap-4">
               <VscSearch className="h-6 w-6" />
-              <button
-                className="hidden text-lg md:inline"
-                onClick={() => setOpenModal(!openModal)}
-              >
-                Search
-              </button>
+          <FullTextSearchInput />
+              
             </span>
           </IconHoverEffect>
         </li>
