@@ -1,6 +1,6 @@
 import { useSession } from "next-auth/react";
 import { VscHeart, VscHeartFilled } from "react-icons/vsc";
-import { IconHoverEffect } from "~/components/IconHoverEffect";
+import { IconHoverEffect } from "~/components/common/icons/IconHoverEffect";
 
 type HeartButtonProps = {
   onClick: () => void;

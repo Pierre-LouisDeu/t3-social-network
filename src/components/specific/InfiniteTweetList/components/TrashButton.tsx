@@ -1,5 +1,5 @@
 import { VscTrash } from "react-icons/vsc";
-import { IconHoverEffect } from "~/components/IconHoverEffect";
+import { IconHoverEffect } from "~/components/common/icons/IconHoverEffect";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -25,7 +25,7 @@ export const TrashButton = ({ onClick }: HeartButtonProps) => {
           <VscTrash className="fill-gray-500 transition-colors duration-200 group-hover:fill-red-500 group-focus-visible:fill-red-500" />
         </IconHoverEffect>
       </button>
-      <ToastContainer 
+      <ToastContainer
         position="top-center"
         autoClose={2000}
         hideProgressBar={false}

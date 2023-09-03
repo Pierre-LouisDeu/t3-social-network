@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { ProfileImage } from "~/components/ProfileImage";
-import { useTimeAgo } from "~/components/InfiniteTweetList/hooks/useTimeAgo";
+import { ProfileImage } from "~/components/common/icons/ProfileImage";
+import { useTimeAgo } from "~/components/specific/InfiniteTweetList/hooks/useTimeAgo";
 import { type Tweet } from "~/types/commonTypes";
 import { HeartButton } from "./HeartButton";
 import { TrashButton } from "./TrashButton";
@@ -28,7 +28,7 @@ export const TweetCard = ({
         <ProfileImage src={user.image} />
       </Link>
       <div className="flex flex-grow flex-col">
-        <div className="flex gap-1">
+        <div className="flex gap-2">
           <Link
             href={`/profiles/${user.id}`}
             className="font-bold outline-none hover:underline focus-visible:underline"
@@ -37,13 +37,13 @@ export const TweetCard = ({
           </Link>
           <span className="text-gray-500">-</span>
           <span className="text-gray-500">{tweetDate}</span>
+          <span className="hidden text-gray-500 md:block">-</span>
           {address && (
-            <>
-              <span className="text-gray-500">-</span>
+            <div className="hidden md:block">
               <span className="text-blue-500">
                 {address.road}, {address.town}, {address.country}
               </span>
-            </>
+            </div>
           )}
         </div>
         <p className="whitespace-pre-wrap">{content}</p>

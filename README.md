@@ -14,9 +14,12 @@ A basic social network built with the T3 stack using Next.js, NextAuth, Prisma, 
   - [x] Refetch tweets after deleting one
 - [x] Enable full text search on tweets
 - [x] Error handling (toast + modals)
-- [ ] Add skeleton loading
-- [ ] Create login page and add classic auth (email + password)
+- [x] Add skeleton loading
+- [ ] Add a dark mode
+- [ ] Update the front end of the login page
+- [ ] ~~Create login page and add classic auth (email + password)~~
 - [ ] Add image upload to tweets
+- [ ] Add the possibility to reply to tweets
 - [ ] Add emojis to tweets reactions
 - [ ] Add a "Map" menu to the sidebar
 
@@ -24,7 +27,9 @@ A basic social network built with the T3 stack using Next.js, NextAuth, Prisma, 
 - [x] Update the date format of tweets
 - [x] No empty tweets
 - [x] prevent users to add ampty tweets or tweets with more than 280 characters
+- [x] Fix the style of the toasts
 - [ ] Put the search button in the profile menu only + add counter 
+- [ ] Fix the location of the tweets (when a part is missing) 
 
 ### CI/CD & Tech 
 - [x] Create the repository on GitHub 

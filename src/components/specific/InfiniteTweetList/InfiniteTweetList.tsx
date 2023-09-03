@@ -1,5 +1,5 @@
 import InfiniteScroll from "react-infinite-scroll-component";
-import { LoadingSpinner } from "../LoadingSpinner";
+import { LoadingSpinner } from "../../common/icons/LoadingSpinner";
 import { type Tweet } from "~/types/commonTypes";
 import { TweetCard } from "./components/TweetCard";
 

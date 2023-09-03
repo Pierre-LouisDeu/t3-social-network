@@ -9,12 +9,12 @@ import { ssgHelper } from "~/server/api/ssgHelper";
 import { api } from "~/utils/api";
 import ErrorPage from "next/error";
 import Link from "next/link";
-import { IconHoverEffect } from "~/components/IconHoverEffect";
+import { IconHoverEffect } from "~/components/common/icons/IconHoverEffect";
 import { VscArrowLeft } from "react-icons/vsc";
-import { ProfileImage } from "~/components/ProfileImage";
-import { InfiniteTweetList } from "~/components/InfiniteTweetList/InfiniteTweetList";
+import { ProfileImage } from "~/components/common/icons/ProfileImage";
+import { InfiniteTweetList } from "~/components/specific/InfiniteTweetList/InfiniteTweetList";
 import { useSession } from "next-auth/react";
-import { Button } from "~/components/Button";
+import { Button } from "~/components/common/buttons/Button";
 
 const ProfilePage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   id,

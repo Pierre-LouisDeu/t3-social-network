@@ -6,7 +6,7 @@ import { api } from "~/utils/api";
 
 import "~/styles/globals.css";
 import Head from "next/head";
-import { SideNav } from "~/components/SideNav";
+import { SideNav } from "~/components/common/layouts/SideNav";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -24,7 +24,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
       </Head>
       <div className="container mx-auto flex items-start">
         <SideNav />
-        <div className="sm:mr-48 min-h-screen flex-grow border-x">
+        <div className="min-h-screen flex-grow border-x sm:mr-48">
           <Component {...pageProps} />
         </div>
       </div>

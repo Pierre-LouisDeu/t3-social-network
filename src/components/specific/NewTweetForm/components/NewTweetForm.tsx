@@ -1,9 +1,9 @@
 import { useSession } from "next-auth/react";
 import { useCallback, useLayoutEffect, useRef, useState } from "react";
-import { useCreateTweet } from "./hooks/useCreateTweet";
-import { ProfileImage } from "../ProfileImage";
-import { Button } from "../Button";
-import { useLocation } from "./hooks/useLocation";
+import { useCreateTweet } from "../hooks/useCreateTweet";
+import { ProfileImage } from "../../../common/icons/ProfileImage";
+import { Button } from "../../../common/buttons/Button";
+import { useLocation } from "../hooks/useLocation";
 
 function updateTextAreaSize(textArea?: HTMLTextAreaElement) {
   if (textArea == null) return;
