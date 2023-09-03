@@ -28,8 +28,10 @@ A basic social network built with the T3 stack using Next.js, NextAuth, Prisma, 
 - [x] No empty tweets
 - [x] prevent users to add ampty tweets or tweets with more than 280 characters
 - [x] Fix the style of the toasts
+- [x] Fix the location of the tweets (when a part is missing) 
+- [ ] Update error handling in tweets list 
 - [ ] Put the search button in the profile menu only + add counter 
-- [ ] Fix the location of the tweets (when a part is missing) 
+
 
 ### CI/CD & Tech 
 - [x] Create the repository on GitHub 

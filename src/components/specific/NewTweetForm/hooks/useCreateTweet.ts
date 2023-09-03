@@ -1,5 +1,5 @@
 import { useSession } from "next-auth/react";
-import { type FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 import { api } from "~/utils/api";
 
 type UseToggleLikeProps = {
@@ -16,6 +16,8 @@ type UseToggleLikeProps = {
 
 type UseCreateTweetType = {
   handleCreateTweet: (e: FormEvent<Element>) => void;
+  isLoading: boolean;
+  error: string | null;
 };
 
 export const useCreateTweet = ({
@@ -27,7 +29,17 @@ export const useCreateTweet = ({
   const trpcUtils = api.useContext();
 
   const createTweet = api.tweet.create.useMutation({
+    onMutate: () => {
+      setIsLoading(true);
+    },
+    onError: (clientErrorBase) => {
+      setIsLoading(false);
+      setError(clientErrorBase.message);
+    },
     onSuccess: (newTweet) => {
+      setIsLoading(false);
+      setError(null);
+
       setInputValue("");
 
       if (session.status !== "authenticated") return;
@@ -67,6 +79,9 @@ export const useCreateTweet = ({
     },
   });
 
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+
   function handleCreateTweet(e: FormEvent) {
     e.preventDefault();
 
@@ -82,5 +97,5 @@ export const useCreateTweet = ({
     });
   }
 
-  return { handleCreateTweet };
+  return { handleCreateTweet, isLoading, error };
 };

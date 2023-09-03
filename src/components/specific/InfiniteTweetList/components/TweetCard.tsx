@@ -22,6 +22,26 @@ export const TweetCard = ({
   const { handleToggleLike, loadingLikes } = useToggleLike({ id, user });
   const { handleDeleteTweet } = useDeleteTweet({ id, user });
 
+  if (!tweetDate || !content || !user) {
+    return (
+      <div className="flex w-full gap-4 border-b px-4 py-4">
+        <div className="flex h-24 w-full animate-pulse space-x-4">
+          <div className="h-12 w-12 rounded-full bg-slate-200"></div>
+          <div className="flex-1 space-y-6 py-1">
+            <div className="grid grid-cols-4 gap-4">
+              <div className="col-span-1 h-2 rounded bg-slate-200"></div>
+              <div className="col-span-1 h-2 rounded bg-slate-200"></div>
+            </div>
+            <div className="h-2 rounded bg-slate-200"></div>
+            <div className="space-y-3">
+              <div className="h-2 rounded bg-slate-200"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <li className="flex gap-4 border-b px-4 py-4">
       <Link href={`/profiles/${user.id}`}>
@@ -41,7 +61,9 @@ export const TweetCard = ({
           {address && (
             <div className="hidden md:block">
               <span className="text-blue-500">
-                {address.road}, {address.town}, {address.country}
+                {address.road && `${address.road}, `}
+                {address.town && `${address.town}, `}
+                {address.country && `${address.country}`}
               </span>
             </div>
           )}

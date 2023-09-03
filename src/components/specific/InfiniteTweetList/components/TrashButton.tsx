@@ -1,7 +1,5 @@
 import { VscTrash } from "react-icons/vsc";
 import { IconHoverEffect } from "~/components/common/icons/IconHoverEffect";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
 type HeartButtonProps = {
   onClick: () => void;
@@ -10,10 +8,11 @@ type HeartButtonProps = {
 import { Fragment, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
+import { notifySuccess } from "~/components/common/toasts/toast";
 
 export const TrashButton = ({ onClick }: HeartButtonProps) => {
   const [open, setOpen] = useState(false);
-  const cancelButtonRef = useRef(null);
+  const deleteButtonRef = useRef(null);
 
   return (
     <>
@@ -25,17 +24,11 @@ export const TrashButton = ({ onClick }: HeartButtonProps) => {
           <VscTrash className="fill-gray-500 transition-colors duration-200 group-hover:fill-red-500 group-focus-visible:fill-red-500" />
         </IconHoverEffect>
       </button>
-      <ToastContainer
-        position="top-center"
-        autoClose={2000}
-        hideProgressBar={false}
-        theme="light"
-      />
       <Transition.Root show={open} as={Fragment}>
         <Dialog
           as="div"
           className="relative z-10"
-          initialFocus={cancelButtonRef}
+          initialFocus={deleteButtonRef}
           onClose={setOpen}
         >
           <Transition.Child
@@ -89,9 +82,10 @@ export const TrashButton = ({ onClick }: HeartButtonProps) => {
                       className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
                       onClick={() => {
                         onClick();
-                        toast.info("Tweet deleted");
+                        notifySuccess({ message: "Tweet deleted" });
                         setOpen(false);
                       }}
+                      ref={deleteButtonRef}
                     >
                       Delete
                     </button>
@@ -99,7 +93,6 @@ export const TrashButton = ({ onClick }: HeartButtonProps) => {
                       type="button"
                       className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
                       onClick={() => setOpen(false)}
-                      ref={cancelButtonRef}
                     >
                       Cancel
                     </button>

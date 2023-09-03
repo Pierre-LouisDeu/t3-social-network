@@ -1,9 +1,11 @@
 import { useSession } from "next-auth/react";
 import { useCallback, useLayoutEffect, useRef, useState } from "react";
-import { useCreateTweet } from "../hooks/useCreateTweet";
-import { ProfileImage } from "../../../common/icons/ProfileImage";
-import { Button } from "../../../common/buttons/Button";
-import { useLocation } from "../hooks/useLocation";
+import { useCreateTweet } from "./hooks/useCreateTweet";
+import { ProfileImage } from "../../common/icons/ProfileImage";
+import { Button } from "../../common/buttons/Button";
+import { useLocation } from "./hooks/useLocation";
+import { LoadingSpinner } from "~/components/common/icons/LoadingSpinner";
+import { notifyError } from "~/components/common/toasts/toast";
 
 function updateTextAreaSize(textArea?: HTMLTextAreaElement) {
   if (textArea == null) return;
@@ -27,7 +29,7 @@ function Form() {
   }, []);
   const session = useSession();
   const { address } = useLocation();
-  const { handleCreateTweet } = useCreateTweet({
+  const { handleCreateTweet, isLoading, error } = useCreateTweet({
     address,
     inputValue,
     setInputValue,
@@ -40,6 +42,11 @@ function Form() {
   const validTweet = inputValue.length === 0 || inputValue.length > 280;
 
   if (session.status !== "authenticated") return null;
+
+  if (error) {
+    notifyError({ message: error });
+    return null;
+  }
 
   return (
     <form
@@ -59,8 +66,8 @@ function Form() {
           placeholder="What's happening?"
         />
       </div>
-      <Button className="self-end" disabled={validTweet}>
-        Tweet
+      <Button className="h-10 w-24 self-end" disabled={validTweet}>
+        {isLoading ? <LoadingSpinner size={6} /> : "Tweet"}
       </Button>
     </form>
   );
