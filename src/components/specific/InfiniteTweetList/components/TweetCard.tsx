@@ -8,6 +8,8 @@ import { useToggleLike } from "../hooks/useToggleLike";
 import { useDeleteTweet } from "../hooks/useDeleteTweet";
 import { useSession } from "next-auth/react";
 import { SkeletonTweetCard } from "./SkeletonTweetCard";
+import { useRouter } from "next/router";
+import { CommentButton } from "./CommentButton";
 
 export const TweetCard = ({
   id,
@@ -18,8 +20,9 @@ export const TweetCard = ({
   likedByMe,
   address,
 }: Tweet) => {
-  const tweetDate = useTimeAgo(createdAt);
+  const router = useRouter();
   const session = useSession();
+  const tweetDate = useTimeAgo(createdAt);
   const { handleToggleLike, loadingLikes } = useToggleLike({ id, user });
   const { handleDeleteTweet } = useDeleteTweet({ id, user });
 
@@ -54,12 +57,18 @@ export const TweetCard = ({
           )}
         </div>
         <p className="whitespace-pre-wrap">{content}</p>
-        <div className="mt-2 flex gap-10">
+        <div className="mt-2 flex gap-8">
           <HeartButton
             onClick={handleToggleLike}
             isLoading={loadingLikes}
             likedByMe={likedByMe}
             likeCount={likeCount}
+          />
+          <CommentButton
+            onClick={() => {
+              void router.push(`/tweets/${id}`);
+            }}
+            redirect
           />
           {user.id === session?.data?.user.id && (
             <TrashButton onClick={handleDeleteTweet} />

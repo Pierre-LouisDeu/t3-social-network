@@ -18,7 +18,7 @@ export const TrashButton = ({ onClick }: HeartButtonProps) => {
     <>
       <button
         onClick={() => setOpen(!open)}
-        className="group -ml-2 flex items-center gap-1 self-start text-gray-500 transition-colors duration-200 hover:text-red-500 focus-visible:text-red-500"
+        className="group flex items-center gap-1 self-start text-gray-500 transition-colors duration-200 hover:text-red-500 focus-visible:text-red-500"
       >
         <IconHoverEffect red>
           <VscTrash className="fill-gray-500 transition-colors duration-200 group-hover:fill-red-500 group-focus-visible:fill-red-500" />
@@ -79,7 +79,7 @@ export const TrashButton = ({ onClick }: HeartButtonProps) => {
                   <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
                     <button
                       type="button"
-                      className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
+                      className="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-400 sm:ml-3 sm:w-auto"
                       onClick={() => {
                         onClick();
                         notifySuccess({ message: "Tweet deleted" });

@@ -31,7 +31,7 @@ export const HeartButton = ({
     <button
       disabled={isLoading}
       onClick={onClick}
-      className={`group -ml-2 flex items-center gap-1 self-start transition-colors duration-200 ${
+      className={`group flex items-center gap-1 self-start transition-colors duration-200 ${
         likedByMe
           ? "text-red-500"
           : "text-gray-500 hover:text-red-500 focus-visible:text-red-500"
@@ -50,3 +50,4 @@ export const HeartButton = ({
     </button>
   );
 };
+

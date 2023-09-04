@@ -12,22 +12,33 @@ import Link from "next/link";
 import { IconHoverEffect } from "~/components/common/icons/IconHoverEffect";
 import { VscArrowLeft } from "react-icons/vsc";
 import { ProfileImage } from "~/components/common/icons/ProfileImage";
-import { InfiniteTweetList } from "~/components/specific/InfiniteTweetList/InfiniteTweetList";
+// import { InfiniteTweetList } from "~/components/specific/InfiniteTweetList/InfiniteTweetList";
 import { useSession } from "next-auth/react";
 import { Button } from "~/components/common/buttons/Button";
+import { TweetCard } from "~/components/specific/InfiniteTweetList/components/TweetCard";
+import { LoadingSpinner } from "~/components/common/icons/LoadingSpinner";
 
 const ProfilePage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   id,
 }) => {
-  const { data: profile } = api.profile.getById.useQuery({ id });
-  const tweets = api.tweet.infiniteProfileFeed.useInfiniteQuery(
-    { userId: id },
-    { getNextPageParam: (lastPage) => lastPage.nextCursor }
-  );
+  const { data: tweet } = api.tweet.getById.useQuery({ id });
+
+  const session = useSession();
+  const userId = session?.data?.user?.id ?? "";
+
+  const { data: profile, isLoading } = api.profile.getById.useQuery({
+    id: userId,
+  });
+
+  // const tweets = api.tweet.infiniteProfileFeed.useInfiniteQuery(
+  //   { userId: id },
+  //   { getNextPageParam: (lastPage) => lastPage.nextCursor }
+  // );
+
   const trpcUtils = api.useContext();
   const toggleFollow = api.profile.toggleFollow.useMutation({
     onSuccess: ({ addedFollow }) => {
-      trpcUtils.profile.getById.setData({ id }, (oldData) => {
+      trpcUtils.profile.getById.setData({ id: userId }, (oldData) => {
         if (oldData == null) return;
 
         const countModifier = addedFollow ? 1 : -1;
@@ -40,14 +51,18 @@ const ProfilePage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
     },
   });
 
-  if (profile == null || profile.name == null) {
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
+
+  if (userId === "" || !profile || !tweet?.user) {
     return <ErrorPage statusCode={404} />;
   }
 
   return (
     <>
       <Head>
-        <title>{`Twitter Clone - ${profile.name}`}</title>
+        <title>{`T3 Social Network - Tweet`}</title>
       </Head>
       <header className="sticky top-0 z-10 flex items-center border-b bg-white px-4 py-2">
         <Link href=".." className="mr-2">
@@ -56,7 +71,7 @@ const ProfilePage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
           </IconHoverEffect>
         </Link>
         <ProfileImage src={profile.image} className="flex-shrink-0" />
-        <div className="ml-4 flex-grow">
+        <div className="lex-grow ml-4">
           <h1 className="text-lg font-bold">{profile.name}</h1>
           <div className="text-gray-500">
             {profile.tweetsCount}{" "}
@@ -69,18 +84,27 @@ const ProfilePage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
         <FollowButton
           isFollowing={profile.isFollowing}
           isLoading={toggleFollow.isLoading}
-          userId={id}
-          onClick={() => toggleFollow.mutate({ userId: id })}
+          userId={userId}
+          onClick={() => toggleFollow.mutate({ userId: userId })}
         />
       </header>
       <main>
-        <InfiniteTweetList
+        <TweetCard
+          id={tweet.id}
+          user={tweet.user}
+          content={tweet.content}
+          createdAt={tweet.createdAt}
+          likeCount={tweet._count.likes}
+          likedByMe={tweet.likes?.length > 0}
+          address={tweet.address}
+        />
+        {/* <InfiniteTweetList
           tweets={tweets.data?.pages.flatMap((page) => page.tweets)}
           isError={tweets.isError}
           isLoading={tweets.isLoading}
           hasMore={tweets.hasNextPage}
           fetchNewTweets={tweets.fetchNextPage}
-        />
+        /> */}
       </main>
     </>
   );

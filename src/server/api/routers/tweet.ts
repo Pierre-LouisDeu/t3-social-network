@@ -11,6 +11,33 @@ import {
 import { Address } from "~/types/commonTypes";
 
 export const tweetRouter = createTRPCRouter({
+  getById: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ input: { id }, ctx }) => {
+      const currentUserId = ctx.session?.user.id;
+
+      const tweet = await ctx.prisma.tweet.findUnique({
+        where: { id },
+        select: {
+          id: true,
+          content: true,
+          createdAt: true,
+          _count: { select: { likes: true } },
+          likes:
+            currentUserId == null
+              ? false
+              : { where: { userId: currentUserId } },
+          user: {
+            select: { name: true, id: true, image: true },
+          },
+          address: {
+            select: { country: true, town: true, road: true },
+          },
+        },
+      });
+
+      return tweet;
+    }),
   infiniteProfileFeed: publicProcedure
     .input(
       z.object({
