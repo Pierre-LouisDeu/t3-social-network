@@ -18,6 +18,8 @@ A basic social network built with the T3 stack using Next.js, NextAuth, Prisma, 
 - [x] Add the possibility to reply to tweets
   - [ ] Create a new page for each tweet 
   - [ ] Add the reply feature
+  - [ ] Redirect full-text search to the tweet
+- [ ] Add error pages (error 404, etc.)
 - [ ] Responsive design
 - [ ] Add a dark mode
 - [ ] Update the front end of the login page
