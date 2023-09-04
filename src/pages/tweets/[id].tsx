@@ -22,12 +22,10 @@ const ProfilePage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   id,
 }) => {
   const { data: tweet } = api.tweet.getById.useQuery({ id });
-
-  const session = useSession();
-  const userId = session?.data?.user?.id ?? "";
+  const userIdFromTweet = tweet?.user?.id ?? "";
 
   const { data: profile, isLoading } = api.profile.getById.useQuery({
-    id: userId,
+    id: userIdFromTweet,
   });
 
   // const tweets = api.tweet.infiniteProfileFeed.useInfiniteQuery(
@@ -38,7 +36,7 @@ const ProfilePage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   const trpcUtils = api.useContext();
   const toggleFollow = api.profile.toggleFollow.useMutation({
     onSuccess: ({ addedFollow }) => {
-      trpcUtils.profile.getById.setData({ id: userId }, (oldData) => {
+      trpcUtils.profile.getById.setData({ id: userIdFromTweet }, (oldData) => {
         if (oldData == null) return;
 
         const countModifier = addedFollow ? 1 : -1;
@@ -55,7 +53,7 @@ const ProfilePage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
     return <LoadingSpinner />;
   }
 
-  if (userId === "" || !profile || !tweet?.user) {
+  if (!profile || !tweet?.user) {
     return <ErrorPage statusCode={404} />;
   }
 
@@ -84,8 +82,8 @@ const ProfilePage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
         <FollowButton
           isFollowing={profile.isFollowing}
           isLoading={toggleFollow.isLoading}
-          userId={userId}
-          onClick={() => toggleFollow.mutate({ userId: userId })}
+          userId={userIdFromTweet}
+          onClick={() => toggleFollow.mutate({ userId: userIdFromTweet })}
         />
       </header>
       <main>
