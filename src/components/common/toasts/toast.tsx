@@ -41,7 +41,7 @@ export const notifySuccess = ({ message }: ToastProps) =>
     draggable: false,
     progress: undefined,
     theme: "colored",
-    style: { backgroundColor: "rgb(59 130 246)" },
+    style: { backgroundColor: "rgb(96 165 250)" },
   });
 
 export const notifyWarning = ({ message }: ToastProps) =>
@@ -54,7 +54,7 @@ export const notifyWarning = ({ message }: ToastProps) =>
     draggable: false,
     progress: undefined,
     theme: "colored",
-    style: { backgroundColor: "rgb(245 158 11)" },
+    style: { backgroundColor: "rgb(251 191 36)" },
   });
 
 export const notifyError = ({ message }: ToastProps) =>
@@ -67,7 +67,7 @@ export const notifyError = ({ message }: ToastProps) =>
     draggable: false,
     progress: undefined,
     theme: "colored",
-    style: { backgroundColor: "rgb(239 68 68)" },
+    style: { backgroundColor: "rgb(248 113 113)" },
   });
 
 export const notifyPromise = ({ promise, messages }: ToastPromiseProps) =>
