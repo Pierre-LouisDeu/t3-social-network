@@ -2,12 +2,14 @@ import { Fragment, useState } from "react";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import { Combobox, Dialog, Transition } from "@headlessui/react";
 import { api } from "~/utils/api";
+import { useRouter } from "next/router";
 
 function classNames(...classes: Array<string | boolean>) {
   return classes.filter(Boolean).join(" ");
 }
 
 export default function FullTextSearchInput() {
+  const router = useRouter();
   const [open, setOpen] = useState<boolean>(false);
   const [query, setQuery] = useState<string>("");
 
@@ -88,6 +90,10 @@ export default function FullTextSearchInput() {
                               active && "bg-indigo-600 text-white"
                             )
                           }
+                          onClick={() => {
+                            void router.push(`/tweets/${tweet.id}`);
+                            setOpen(false);
+                          }}
                         >
                           {tweet.content}
                         </Combobox.Option>

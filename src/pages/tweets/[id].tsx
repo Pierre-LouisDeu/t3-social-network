@@ -69,7 +69,7 @@ const ProfilePage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
           </IconHoverEffect>
         </Link>
         <ProfileImage src={profile.image} className="flex-shrink-0" />
-        <div className="lex-grow ml-4">
+        <div className="ml-4 flex-grow">
           <h1 className="text-lg font-bold">{profile.name}</h1>
           <div className="text-gray-500">
             {profile.tweetsCount}{" "}
