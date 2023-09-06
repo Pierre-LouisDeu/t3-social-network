@@ -22,7 +22,7 @@ export const tweetRouter = createTRPCRouter({
           id: true,
           content: true,
           createdAt: true,
-          _count: { select: { likes: true } },
+          _count: { select: { likes: true, comment: true } },
           likes:
             currentUserId == null
               ? false
@@ -178,7 +178,7 @@ async function getInfiniteTweets({
       id: true,
       content: true,
       createdAt: true,
-      _count: { select: { likes: true } },
+      _count: { select: { likes: true, comment: true  } },
       likes:
         currentUserId == null ? false : { where: { userId: currentUserId } },
       user: {
@@ -205,6 +205,7 @@ async function getInfiniteTweets({
         content: tweet.content,
         createdAt: tweet.createdAt,
         likeCount: tweet._count.likes,
+        commentCount: tweet._count.comment,
         user: tweet.user,
         likedByMe: tweet.likes?.length > 0,
         address: tweet.address,

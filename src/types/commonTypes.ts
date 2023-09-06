@@ -15,6 +15,7 @@ export type Tweet = {
   content: string;
   createdAt: Date;
   likeCount: number;
+  commentCount: number;
   likedByMe: boolean;
   user: { id: string; image: string | null; name: string | null };
   address: {
@@ -22,4 +23,12 @@ export type Tweet = {
     town: string | null;
     road: string | null;
   } | null;
+  hideCommentBtn?: boolean;
 };
+
+export type Comment = {
+  id: string;
+  content: string;
+  createdAt: Date;
+  user: { id: string; image: string | null; name: string | null };
+}

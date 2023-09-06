@@ -18,13 +18,29 @@ model Tweet {
     content   String
     createdAt DateTime @default(now())
 
-    user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    user    User      @relation(fields: [userId], references: [id], onDelete: Cascade)
     likes   Like[]
     address Address?
+    comment Comment[]
 
     @@unique([createdAt, id])
     @@index([userId])
     @@fulltext([content])
+}
+
+model Comment {
+    id        String   @id @default(uuid())
+    userId    String
+    tweetId   String
+    content   String
+    createdAt DateTime @default(now())
+
+    user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+    tweet Tweet @relation(fields: [tweetId], references: [id], onDelete: Cascade)
+
+    @@unique([createdAt, id])
+    @@index([userId])
+    @@index([tweetId])
 }
 
 model Address {
@@ -94,6 +110,7 @@ model User {
     likes         Like[]
     followers     User[]    @relation(name: "Followers")
     follows       User[]    @relation(name: "Followers")
+    Comment       Comment[]
 }
 
 model VerificationToken {

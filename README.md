@@ -16,10 +16,10 @@ A basic social network built with the T3 stack using Next.js, NextAuth, Prisma, 
 - [x] Error handling (toast + modals)
 - [x] Add skeleton loading
 - [x] Add the possibility to reply to tweets
-  - [x] Create new pages "tweets/[tweetId]"
+  - [x] Create new pages "tweets/[tweetId]"  
   - [x] Add a reply button to each tweet
+  - [x] Redirect full-text search to the tweet
   - [ ] Add the reply feature
-  - [ ] Redirect full-text search to the tweet
 - [ ] Add error pages (error 404, etc.)
 - [ ] Responsive design
 - [ ] Add a dark mode

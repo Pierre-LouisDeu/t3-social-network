@@ -6,8 +6,8 @@ import { TweetCard } from "./components/TweetCard";
 type InfiniteTweetListProps = {
   isLoading: boolean;
   isError: boolean;
-  hasMore: boolean | undefined;
   fetchNewTweets: () => Promise<unknown>;
+  hasMore?: boolean;
   tweets?: Tweet[] | null;
 };
 

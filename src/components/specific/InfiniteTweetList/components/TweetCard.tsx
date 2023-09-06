@@ -17,8 +17,10 @@ export const TweetCard = ({
   content,
   createdAt,
   likeCount,
+  commentCount,
   likedByMe,
   address,
+  hideCommentBtn = false,
 }: Tweet) => {
   const router = useRouter();
   const session = useSession();
@@ -64,13 +66,15 @@ export const TweetCard = ({
             likedByMe={likedByMe}
             likeCount={likeCount}
           />
-          <CommentButton
-            onClick={() => {
-              void router.push(`/tweets/${id}`);
-            }}
-            redirect
-          />
-          {user.id === session?.data?.user.id && (
+          {!hideCommentBtn && session.status === "authenticated" && (
+            <CommentButton
+              onClick={() => {
+                void router.push(`/tweets/${user.id}/${id}`);
+              }}
+              commentCount={commentCount}
+            />
+          )}
+          {!hideCommentBtn && user.id === session?.data?.user.id && (
             <TrashButton onClick={handleDeleteTweet} />
           )}
         </div>

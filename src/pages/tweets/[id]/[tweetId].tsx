@@ -5,38 +5,45 @@ import type {
   NextPage,
 } from "next";
 import Head from "next/head";
-import { ssgHelper } from "~/server/api/ssgHelper";
 import { api } from "~/utils/api";
 import ErrorPage from "next/error";
 import Link from "next/link";
 import { IconHoverEffect } from "~/components/common/icons/IconHoverEffect";
 import { VscArrowLeft } from "react-icons/vsc";
 import { ProfileImage } from "~/components/common/icons/ProfileImage";
-// import { InfiniteTweetList } from "~/components/specific/InfiniteTweetList/InfiniteTweetList";
-import { useSession } from "next-auth/react";
-import { Button } from "~/components/common/buttons/Button";
 import { TweetCard } from "~/components/specific/InfiniteTweetList/components/TweetCard";
 import { LoadingSpinner } from "~/components/common/icons/LoadingSpinner";
+import FollowButton from "~/components/specific/header/FollowButton";
+import { ssgHelper } from "~/server/api/ssgHelper";
+import { useSession } from "next-auth/react";
+import { NewCommentForm } from "~/components/specific/NewTweetForm/NewCommentForm";
+import { InfiniteCommentList } from "~/components/specific/InfiniteTweetList/InfiniteCommentList";
 
 const ProfilePage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   id,
+  tweetId,
 }) => {
-  const { data: tweet } = api.tweet.getById.useQuery({ id });
-  const userIdFromTweet = tweet?.user?.id ?? "";
+  const session = useSession();
+  const userId = session?.data?.user.id ?? "";
 
-  const { data: profile, isLoading } = api.profile.getById.useQuery({
-    id: userIdFromTweet,
+  const { data: tweet, isLoading: loadingTweet } = api.tweet.getById.useQuery({
+    id: tweetId,
   });
 
-  // const tweets = api.tweet.infiniteProfileFeed.useInfiniteQuery(
-  //   { userId: id },
-  //   { getNextPageParam: (lastPage) => lastPage.nextCursor }
-  // );
+  const { data: profile, isLoading: loadingProfile } =
+    api.profile.getById.useQuery({
+      id,
+    });
+
+  const comments = api.comment.infiniteProfileFeed.useInfiniteQuery(
+    { tweetId },
+    { getNextPageParam: (lastPage) => lastPage.nextCursor }
+  );
 
   const trpcUtils = api.useContext();
   const toggleFollow = api.profile.toggleFollow.useMutation({
     onSuccess: ({ addedFollow }) => {
-      trpcUtils.profile.getById.setData({ id: userIdFromTweet }, (oldData) => {
+      trpcUtils.profile.getById.setData({ id: userId }, (oldData) => {
         if (oldData == null) return;
 
         const countModifier = addedFollow ? 1 : -1;
@@ -49,7 +56,7 @@ const ProfilePage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
     },
   });
 
-  if (isLoading) {
+  if (loadingTweet || loadingProfile) {
     return <LoadingSpinner />;
   }
 
@@ -62,15 +69,22 @@ const ProfilePage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
       <Head>
         <title>{`T3 Social Network - Tweet`}</title>
       </Head>
-      <header className="sticky top-0 z-10 flex items-center border-b bg-white px-4 py-2">
+      <header className="sticky top-0 z-10 flex items-center border-b bg-white p-4">
         <Link href=".." className="mr-2">
           <IconHoverEffect>
             <VscArrowLeft className="h-6 w-6" />
           </IconHoverEffect>
         </Link>
-        <ProfileImage src={profile.image} className="flex-shrink-0" />
+        <Link href={`/profiles/${id}`}>
+          <ProfileImage src={profile.image} />
+        </Link>
         <div className="ml-4 flex-grow">
-          <h1 className="text-lg font-bold">{profile.name}</h1>
+          <Link
+            href={`/profiles/${id}`}
+            className="font-bold outline-none hover:underline focus-visible:underline"
+          >
+            {profile.name}
+          </Link>
           <div className="text-gray-500">
             {profile.tweetsCount}{" "}
             {getPlural(profile.tweetsCount, "Tweet", "Tweets")} -{" "}
@@ -82,8 +96,8 @@ const ProfilePage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
         <FollowButton
           isFollowing={profile.isFollowing}
           isLoading={toggleFollow.isLoading}
-          userId={userIdFromTweet}
-          onClick={() => toggleFollow.mutate({ userId: userIdFromTweet })}
+          userId={id}
+          onClick={() => toggleFollow.mutate({ userId: id })}
         />
       </header>
       <main>
@@ -93,44 +107,23 @@ const ProfilePage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
           content={tweet.content}
           createdAt={tweet.createdAt}
           likeCount={tweet._count.likes}
+          commentCount={tweet._count.comment}
           likedByMe={tweet.likes?.length > 0}
           address={tweet.address}
+          hideCommentBtn
         />
-        {/* <InfiniteTweetList
-          tweets={tweets.data?.pages.flatMap((page) => page.tweets)}
-          isError={tweets.isError}
-          isLoading={tweets.isLoading}
-          hasMore={tweets.hasNextPage}
-          fetchNewTweets={tweets.fetchNextPage}
-        /> */}
+        <NewCommentForm tweetId={tweetId} />
+        <InfiniteCommentList
+          comments={comments.data?.pages.flatMap((page) => page.comments)}
+          isError={comments.isError}
+          isLoading={comments.isLoading}
+          hasMore={comments.hasNextPage}
+          fetchNewComments={comments.fetchNextPage}
+        />
       </main>
     </>
   );
 };
-
-function FollowButton({
-  userId,
-  isFollowing,
-  isLoading,
-  onClick,
-}: {
-  userId: string;
-  isFollowing: boolean;
-  isLoading: boolean;
-  onClick: () => void;
-}) {
-  const session = useSession();
-
-  if (session.status !== "authenticated" || session.data.user.id === userId) {
-    return null;
-  }
-
-  return (
-    <Button disabled={isLoading} onClick={onClick} small red={isFollowing}>
-      {isFollowing ? "Unfollow" : "Follow"}
-    </Button>
-  );
-}
 
 const pluralRules = new Intl.PluralRules();
 function getPlural(number: number, singular: string, plural: string) {
@@ -145,11 +138,12 @@ export const getStaticPaths: GetStaticPaths = () => {
 };
 
 export async function getStaticProps(
-  context: GetStaticPropsContext<{ id: string }>
+  context: GetStaticPropsContext<{ id: string; tweetId: string }>
 ) {
   const id = context.params?.id;
+  const tweetId = context.params?.tweetId;
 
-  if (id == null) {
+  if (id == null || tweetId == null) {
     return {
       redirect: {
         destination: "/",
@@ -164,6 +158,7 @@ export async function getStaticProps(
     props: {
       trpcState: ssg.dehydrate(),
       id,
+      tweetId,
     },
   };
 }

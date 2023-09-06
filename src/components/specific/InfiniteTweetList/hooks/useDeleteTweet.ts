@@ -11,7 +11,7 @@ type UseToggleLikeProps = {
 
 type UseDeleteTweetType = {
   handleDeleteTweet: () => void;
-  loadingLikes: boolean;
+  loadingDelete: boolean;
 };
 
 export const useDeleteTweet = ({
@@ -50,5 +50,5 @@ export const useDeleteTweet = ({
     deleteTweet.mutate({ id, tweetUserId: user.id });
   }
 
-  return { handleDeleteTweet, loadingLikes: deleteTweet.isLoading };
+  return { handleDeleteTweet, loadingDelete: deleteTweet.isLoading };
 };

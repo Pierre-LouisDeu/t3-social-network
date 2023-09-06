@@ -13,18 +13,28 @@ import { IconHoverEffect } from "~/components/common/icons/IconHoverEffect";
 import { VscArrowLeft } from "react-icons/vsc";
 import { ProfileImage } from "~/components/common/icons/ProfileImage";
 import { InfiniteTweetList } from "~/components/specific/InfiniteTweetList/InfiniteTweetList";
-import { useSession } from "next-auth/react";
-import { Button } from "~/components/common/buttons/Button";
+import FollowButton from "~/components/specific/header/FollowButton";
+import { LoadingSpinner } from "~/components/common/icons/LoadingSpinner";
 
 const ProfilePage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   id,
 }) => {
-  const { data: profile } = api.profile.getById.useQuery({ id });
-  const tweets = api.tweet.infiniteProfileFeed.useInfiniteQuery(
-    { userId: id },
+  const { data: profile, isLoading } = api.profile.getById.useQuery({ id });
+
+    const tweets = api.tweet.infiniteFeed.useInfiniteQuery(
+    {},
     { getNextPageParam: (lastPage) => lastPage.nextCursor }
   );
+
+  // Invetigate here
+  
+  // const tweets = api.tweet.infiniteProfileFeed.useInfiniteQuery(
+  //   { userId: id },
+  //   { getNextPageParam: (lastPage) => lastPage.nextCursor }
+  // );
+
   const trpcUtils = api.useContext();
+
   const toggleFollow = api.profile.toggleFollow.useMutation({
     onSuccess: ({ addedFollow }) => {
       trpcUtils.profile.getById.setData({ id }, (oldData) => {
@@ -40,6 +50,10 @@ const ProfilePage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
     },
   });
 
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
+
   if (profile == null || profile.name == null) {
     return <ErrorPage statusCode={404} />;
   }
@@ -49,15 +63,22 @@ const ProfilePage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
       <Head>
         <title>{`Twitter Clone - ${profile.name}`}</title>
       </Head>
-      <header className="sticky top-0 z-10 flex items-center border-b bg-white px-4 py-2">
+      <header className="sticky top-0 z-10 flex items-center border-b bg-white p-4">
         <Link href=".." className="mr-2">
           <IconHoverEffect>
             <VscArrowLeft className="h-6 w-6" />
           </IconHoverEffect>
         </Link>
-        <ProfileImage src={profile.image} className="flex-shrink-0" />
+        <Link href={`/profiles/${id}`}>
+          <ProfileImage src={profile.image} />
+        </Link>
         <div className="ml-4 flex-grow">
-          <h1 className="text-lg font-bold">{profile.name}</h1>
+          <Link
+            href={`/profiles/${id}`}
+            className="font-bold outline-none hover:underline focus-visible:underline"
+          >
+            {profile.name}
+          </Link>
           <div className="text-gray-500">
             {profile.tweetsCount}{" "}
             {getPlural(profile.tweetsCount, "Tweet", "Tweets")} -{" "}
@@ -85,30 +106,6 @@ const ProfilePage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
     </>
   );
 };
-
-function FollowButton({
-  userId,
-  isFollowing,
-  isLoading,
-  onClick,
-}: {
-  userId: string;
-  isFollowing: boolean;
-  isLoading: boolean;
-  onClick: () => void;
-}) {
-  const session = useSession();
-
-  if (session.status !== "authenticated" || session.data.user.id === userId) {
-    return null;
-  }
-
-  return (
-    <Button disabled={isLoading} onClick={onClick} small red={isFollowing}>
-      {isFollowing ? "Unfollow" : "Follow"}
-    </Button>
-  );
-}
 
 const pluralRules = new Intl.PluralRules();
 function getPlural(number: number, singular: string, plural: string) {
