@@ -50,6 +50,7 @@ export const useCreateTweet = ({
         const newCacheTweet = {
           ...newTweet,
           likeCount: 0,
+          commentCount: 0,
           likedByMe: false,
           user: {
             id: session.data.user.id,
