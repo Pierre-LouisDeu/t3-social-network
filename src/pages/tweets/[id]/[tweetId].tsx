@@ -18,12 +18,14 @@ import { ssgHelper } from "~/server/api/ssgHelper";
 import { useSession } from "next-auth/react";
 import { NewCommentForm } from "~/components/specific/NewTweetForm/NewCommentForm";
 import { InfiniteCommentList } from "~/components/specific/InfiniteTweetList/InfiniteCommentList";
+import { useState } from "react";
 
 const ProfilePage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   id,
   tweetId,
 }) => {
   const session = useSession();
+  const [tweetIsLoading, setTweetIsLoading] = useState<boolean>(true);
   const userId = session?.data?.user.id ?? "";
 
   const { data: tweet, isLoading: loadingTweet } = api.tweet.getById.useQuery({
@@ -35,8 +37,8 @@ const ProfilePage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
       id,
     });
 
-  const comments = api.comment.infiniteProfileFeed.useInfiniteQuery(
-    { tweetId },
+  const comments = api.comment.infiniteFeed.useInfiniteQuery(
+    {},
     { getNextPageParam: (lastPage) => lastPage.nextCursor }
   );
 
@@ -70,7 +72,7 @@ const ProfilePage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
         <title>{`T3 Social Network - Tweet`}</title>
       </Head>
       <header className="sticky top-0 z-10 flex items-center border-b bg-white p-4">
-        <Link href=".." className="mr-2">
+        <Link href="/" className="mr-2">
           <IconHoverEffect>
             <VscArrowLeft className="h-6 w-6" />
           </IconHoverEffect>
@@ -102,17 +104,19 @@ const ProfilePage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
       </header>
       <main>
         <TweetCard
-          id={tweet.id}
-          user={tweet.user}
-          content={tweet.content}
-          createdAt={tweet.createdAt}
-          likeCount={tweet._count.likes}
-          commentCount={tweet._count.comment}
-          likedByMe={tweet.likes?.length > 0}
-          address={tweet.address}
+          id={tweet?.id}
+          user={tweet?.user}
+          content={tweet?.content}
+          createdAt={tweet?.createdAt}
+          likeCount={tweet?._count.likes}
+          commentCount={tweet?._count.comment}
+          likedByMe={tweet?.likes?.length > 0}
+          address={tweet?.address}
+          setTweetIsLoading={setTweetIsLoading}
           hideCommentBtn
+          hideDeleteBtn
         />
-        <NewCommentForm tweetId={tweetId} />
+        <NewCommentForm tweetId={tweetId} loading={tweetIsLoading} />
         <InfiniteCommentList
           comments={comments.data?.pages.flatMap((page) => page.comments)}
           isError={comments.isError}

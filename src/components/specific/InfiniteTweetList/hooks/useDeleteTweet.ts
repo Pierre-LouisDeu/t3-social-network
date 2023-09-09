@@ -22,8 +22,10 @@ export const useDeleteTweet = ({
 
   const deleteTweet = api.tweet.delete.useMutation({
     onSuccess: ({ deletedTweet }) => {
-      const Updater:
-        | Parameters<typeof trpcUtils.tweet.infiniteFeed.setInfiniteData>[1]
+      const updateData:
+        | Parameters<
+            typeof trpcUtils.tweet.infiniteFeed.setInfiniteData
+          >[1]
         | null = (oldData) => {
         if (!deletedTweet) return;
 
@@ -42,7 +44,15 @@ export const useDeleteTweet = ({
         };
       };
 
-      trpcUtils.tweet.infiniteFeed.setInfiniteData({}, Updater);
+      trpcUtils.tweet.infiniteFeed.setInfiniteData({}, updateData);
+      trpcUtils.tweet.infiniteFeed.setInfiniteData(
+        { onlyFollowing: true },
+        updateData
+      );
+      trpcUtils.tweet.infiniteProfileFeed.setInfiniteData(
+        { userId: user.id },
+        updateData
+      );
     },
   });
 

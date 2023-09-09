@@ -23,7 +23,13 @@ export type Tweet = {
     town: string | null;
     road: string | null;
   } | null;
+};
+
+export type CommentCardType = {
+  setTweetIsLoading: (isLoading: boolean) => void;
   hideCommentBtn?: boolean;
+  hideDeleteBtn?: boolean;
+
 };
 
 export type Comment = {
@@ -31,4 +37,4 @@ export type Comment = {
   content: string;
   createdAt: Date;
   user: { id: string; image: string | null; name: string | null };
-}
+};

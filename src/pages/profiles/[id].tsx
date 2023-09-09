@@ -21,20 +21,12 @@ const ProfilePage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
 }) => {
   const { data: profile, isLoading } = api.profile.getById.useQuery({ id });
 
-    const tweets = api.tweet.infiniteFeed.useInfiniteQuery(
-    {},
+  const tweets = api.tweet.infiniteProfileFeed.useInfiniteQuery(
+    { userId: id },
     { getNextPageParam: (lastPage) => lastPage.nextCursor }
   );
 
-  // Invetigate here
-  
-  // const tweets = api.tweet.infiniteProfileFeed.useInfiniteQuery(
-  //   { userId: id },
-  //   { getNextPageParam: (lastPage) => lastPage.nextCursor }
-  // );
-
   const trpcUtils = api.useContext();
-
   const toggleFollow = api.profile.toggleFollow.useMutation({
     onSuccess: ({ addedFollow }) => {
       trpcUtils.profile.getById.setData({ id }, (oldData) => {

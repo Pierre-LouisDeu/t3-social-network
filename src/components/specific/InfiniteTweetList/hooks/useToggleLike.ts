@@ -59,6 +59,9 @@ export const useToggleLike = ({
         { userId: user.id },
         updateData
       );
+      void trpcUtils.tweet.getById.refetch({
+        id,
+      });
     },
   });
 

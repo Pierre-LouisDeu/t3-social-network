@@ -5,14 +5,18 @@ import { Button } from "../../common/buttons/Button";
 import { LoadingSpinner } from "~/components/common/icons/LoadingSpinner";
 import { notifyError } from "~/components/common/toasts/toast";
 import { useCreateComment } from "./hooks/useCreateComment";
+import { SkeletonTweetCard } from "../InfiniteTweetList/components/SkeletonTweetCard";
 
 type NewCommentFormProps = {
   tweetId: string;
+  loading?: boolean;
 };
 
-export function NewCommentForm({ tweetId }: NewCommentFormProps) {
+export function NewCommentForm({ tweetId, loading }: NewCommentFormProps) {
   const session = useSession();
   if (session.status !== "authenticated") return null;
+
+  if (loading) return <SkeletonTweetCard />;
 
   return <Form tweetId={tweetId} />;
 }

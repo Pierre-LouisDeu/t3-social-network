@@ -16,7 +16,7 @@ export const useDeleteComment = ({
 
   const deleteComment = api.comment.delete.useMutation({
     onSuccess: ({ deletedComment }) => {
-      const Updater:
+      const updateData:
         | Parameters<typeof trpcUtils.comment.infiniteFeed.setInfiniteData>[1]
         | null = (oldData) => {
         if (!deletedComment) return;
@@ -36,7 +36,7 @@ export const useDeleteComment = ({
         };
       };
 
-      trpcUtils.comment.infiniteFeed.setInfiniteData({}, Updater);
+      trpcUtils.comment.infiniteFeed.setInfiniteData({}, updateData);
     },
   });
 

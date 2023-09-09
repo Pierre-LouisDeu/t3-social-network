@@ -27,26 +27,9 @@ export const commentRouter = createTRPCRouter({
 
       return comment;
     }),
-  infiniteProfileFeed: publicProcedure
-    .input(
-      z.object({
-        tweetId: z.string(),
-        limit: z.number().optional(),
-        cursor: z.object({ id: z.string(), createdAt: z.date() }).optional(),
-      })
-    )
-    .query(async ({ input: { limit = 10, tweetId, cursor }, ctx }) => {
-      return await getInfiniteComments({
-        limit,
-        ctx,
-        cursor,
-        whereClause: { tweetId },
-      });
-    }),
   infiniteFeed: publicProcedure
     .input(
       z.object({
-        onlyFollowing: z.boolean().optional(),
         limit: z.number().optional(),
         cursor: z.object({ id: z.string(), createdAt: z.date() }).optional(),
       })

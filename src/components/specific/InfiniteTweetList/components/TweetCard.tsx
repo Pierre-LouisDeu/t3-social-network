@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ProfileImage } from "~/components/common/icons/ProfileImage";
 import { useTimeAgo } from "~/components/specific/InfiniteTweetList/hooks/useTimeAgo";
-import { type Tweet } from "~/types/commonTypes";
+import { type CommentCardType, type Tweet } from "~/types/commonTypes";
 import { HeartButton } from "./HeartButton";
 import { TrashButton } from "./TrashButton";
 import { useToggleLike } from "../hooks/useToggleLike";
@@ -20,8 +20,10 @@ export const TweetCard = ({
   commentCount,
   likedByMe,
   address,
+  setTweetIsLoading,
   hideCommentBtn = false,
-}: Tweet) => {
+  hideDeleteBtn = false,
+}: Tweet & CommentCardType) => {
   const router = useRouter();
   const session = useSession();
   const tweetDate = useTimeAgo(createdAt);
@@ -29,7 +31,10 @@ export const TweetCard = ({
   const { handleDeleteTweet } = useDeleteTweet({ id, user });
 
   if (!tweetDate || !content || !user) {
+    setTweetIsLoading && setTweetIsLoading(true);
     return <SkeletonTweetCard />;
+  } else {
+    setTweetIsLoading && setTweetIsLoading(false);
   }
 
   return (
@@ -74,7 +79,7 @@ export const TweetCard = ({
               commentCount={commentCount}
             />
           )}
-          {!hideCommentBtn && user.id === session?.data?.user.id && (
+          {!hideDeleteBtn && user.id === session?.data?.user.id && (
             <TrashButton onClick={handleDeleteTweet} />
           )}
         </div>
