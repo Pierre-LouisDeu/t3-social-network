@@ -26,7 +26,7 @@ export type Tweet = {
 };
 
 export type CommentCardType = {
-  setTweetIsLoading: (isLoading: boolean) => void;
+  setTweetIsLoading?: (isLoading: boolean) => void;
   hideCommentBtn?: boolean;
   hideDeleteBtn?: boolean;
 
