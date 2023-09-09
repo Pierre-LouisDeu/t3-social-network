@@ -30,15 +30,17 @@ export const commentRouter = createTRPCRouter({
   infiniteFeed: publicProcedure
     .input(
       z.object({
+        tweetId: z.string(),
         limit: z.number().optional(),
         cursor: z.object({ id: z.string(), createdAt: z.date() }).optional(),
       })
     )
-    .query(async ({ input: { limit = 10, cursor }, ctx }) => {
+    .query(async ({ input: { tweetId, limit = 10, cursor }, ctx }) => {
       return await getInfiniteComments({
         limit,
         ctx,
         cursor,
+        whereClause: { tweetId },
       });
     }),
   create: protectedProcedure
@@ -103,6 +105,7 @@ async function getInfiniteComments({
     where: whereClause,
     select: {
       id: true,
+      tweetId: true,
       content: true,
       createdAt: true,
       user: {
@@ -123,6 +126,7 @@ async function getInfiniteComments({
     comments: data.map((comment) => {
       return {
         id: comment.id,
+        tweetId: comment.tweetId,
         content: comment.content,
         createdAt: comment.createdAt,
         user: comment.user,

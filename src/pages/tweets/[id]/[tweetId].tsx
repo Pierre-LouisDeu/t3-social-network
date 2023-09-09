@@ -38,7 +38,7 @@ const ProfilePage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
     });
 
   const comments = api.comment.infiniteFeed.useInfiniteQuery(
-    {},
+    { tweetId },
     { getNextPageParam: (lastPage) => lastPage.nextCursor }
   );
 

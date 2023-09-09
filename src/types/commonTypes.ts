@@ -34,6 +34,7 @@ export type CommentCardType = {
 
 export type Comment = {
   id: string;
+  tweetId: string;
   content: string;
   createdAt: Date;
   user: { id: string; image: string | null; name: string | null };

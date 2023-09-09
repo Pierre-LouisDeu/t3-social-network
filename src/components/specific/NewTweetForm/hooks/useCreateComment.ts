@@ -38,11 +38,12 @@ export const useCreateComment = ({
 
       if (session.status !== "authenticated") return;
 
-      trpcUtils.comment.infiniteFeed.setInfiniteData({}, (oldData) => {
+      trpcUtils.comment.infiniteFeed.setInfiniteData({ tweetId }, (oldData) => {
         if (oldData == null || oldData.pages[0] == null) return;
 
         const newCacheComment = {
           ...newComment,
+          tweetId: tweetId,
           user: {
             id: session.data.user.id,
             name: session.data.user.name || null,

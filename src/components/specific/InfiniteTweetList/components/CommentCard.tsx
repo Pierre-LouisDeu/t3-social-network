@@ -7,10 +7,10 @@ import { useSession } from "next-auth/react";
 import { SkeletonTweetCard } from "./SkeletonTweetCard";
 import { useDeleteComment } from "../hooks/useDeleteComment";
 
-export const CommentCard = ({ id, user, content, createdAt }: Comment) => {
+export const CommentCard = ({ id, tweetId, user, content, createdAt }: Comment) => {
   const session = useSession();
   const tweetDate = useTimeAgo(createdAt);
-  const { handleDeleteComment } = useDeleteComment({ id });
+  const { handleDeleteComment } = useDeleteComment({ id, tweetId });
 
   if (!tweetDate || !content || !user) {
     return <SkeletonTweetCard />;

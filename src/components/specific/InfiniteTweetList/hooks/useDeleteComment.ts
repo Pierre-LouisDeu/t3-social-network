@@ -2,6 +2,7 @@ import { api } from "~/utils/api";
 
 type UseToggleLikeProps = {
   id: string;
+  tweetId: string;
 };
 
 type UseDeleteCommentType = {
@@ -11,6 +12,7 @@ type UseDeleteCommentType = {
 
 export const useDeleteComment = ({
   id,
+  tweetId,
 }: UseToggleLikeProps): UseDeleteCommentType => {
   const trpcUtils = api.useContext();
 
@@ -36,7 +38,7 @@ export const useDeleteComment = ({
         };
       };
 
-      trpcUtils.comment.infiniteFeed.setInfiniteData({}, updateData);
+      trpcUtils.comment.infiniteFeed.setInfiniteData({ tweetId }, updateData);
     },
   });
 
