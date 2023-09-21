@@ -91,7 +91,7 @@ export default function FullTextSearchInput() {
                             )
                           }
                           onClick={() => {
-                            void router.push(`/tweets/${tweet.id}`);
+                            void router.push(`/tweets/${tweet.userId}/${tweet.id}`);
                             setOpen(false);
                           }}
                         >

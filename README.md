@@ -40,6 +40,7 @@ A basic social network built with the T3 stack using Next.js, NextAuth, Prisma, 
 - [x] Fix the toasts color (500 -> 400) 
 - [ ] Update error handling in tweets list 
 - [ ] Put the search button in the profile menu only + add counter 
+- [ ] Refacto DS
 
 
 ### CI/CD & Tech 
