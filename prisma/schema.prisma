@@ -22,10 +22,21 @@ model Tweet {
     likes   Like[]
     address Address?
     comment Comment[]
+    images  Image[] 
 
     @@unique([createdAt, id])
     @@index([userId])
     @@fulltext([content])
+}
+
+model Image {
+    id      String @id @default(uuid())
+    url     String
+    tweetId String
+
+    tweet   Tweet   @relation(fields: [tweetId], references: [id], onDelete: Cascade)
+
+    @@index([tweetId])
 }
 
 model Comment {

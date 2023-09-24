@@ -8,7 +8,7 @@ import {
   protectedProcedure,
   createTRPCContext,
 } from "~/server/api/trpc";
-import { Address } from "~/types/commonTypes";
+import { zAddress, zImage } from "~/types/commonTypes";
 
 export const tweetRouter = createTRPCRouter({
   getById: publicProcedure
@@ -21,6 +21,9 @@ export const tweetRouter = createTRPCRouter({
         select: {
           id: true,
           content: true,
+          images: {
+            select: { id: true, url: true },
+          },
           createdAt: true,
           _count: { select: { likes: true, comment: true } },
           likes:
@@ -84,13 +87,20 @@ export const tweetRouter = createTRPCRouter({
     .input(
       z.object({
         content: z.string(),
-        address: Address,
+        images: zImage,
+        address: zAddress,
       })
     )
-    .mutation(async ({ input: { content, address }, ctx }) => {
+    .mutation(async ({ input: { content, images, address }, ctx }) => {
       const tweet = await ctx.prisma.tweet.create({
         data: {
           content,
+          images: {
+            create: images?.map((image) => ({
+              id: image.id,
+              url: image.url,
+            })),
+          },
           userId: ctx.session.user.id,
           address: {
             create: {
@@ -145,6 +155,9 @@ export const tweetRouter = createTRPCRouter({
   fullTextSearch: publicProcedure
     .input(z.object({ query: z.string() }))
     .query(async ({ input: { query }, ctx }) => {
+      if (query.length < 3) {
+        return [];
+      }
       const result = await ctx.prisma.tweet.findMany({
         where: {
           content: {
@@ -177,8 +190,11 @@ async function getInfiniteTweets({
     select: {
       id: true,
       content: true,
+      images: {
+        select: { id: true, url: true },
+      },
       createdAt: true,
-      _count: { select: { likes: true, comment: true  } },
+      _count: { select: { likes: true, comment: true } },
       likes:
         currentUserId == null ? false : { where: { userId: currentUserId } },
       user: {
@@ -203,6 +219,10 @@ async function getInfiniteTweets({
       return {
         id: tweet.id,
         content: tweet.content,
+        images: tweet.images?.map((image) => ({
+          id: image.id,
+          url: image.url,
+        })),
         createdAt: tweet.createdAt,
         likeCount: tweet._count.likes,
         commentCount: tweet._count.comment,

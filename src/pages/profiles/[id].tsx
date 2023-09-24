@@ -15,6 +15,7 @@ import { ProfileImage } from "~/components/common/icons/ProfileImage";
 import { InfiniteTweetList } from "~/components/specific/InfiniteTweetList/InfiniteTweetList";
 import FollowButton from "~/components/specific/header/FollowButton";
 import { LoadingSpinner } from "~/components/common/icons/LoadingSpinner";
+import { getPlural } from "~/utils/utils";
 
 const ProfilePage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   id,
@@ -98,11 +99,6 @@ const ProfilePage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
     </>
   );
 };
-
-const pluralRules = new Intl.PluralRules();
-function getPlural(number: number, singular: string, plural: string) {
-  return pluralRules.select(number) === "one" ? singular : plural;
-}
 
 export const getStaticPaths: GetStaticPaths = () => {
   return {

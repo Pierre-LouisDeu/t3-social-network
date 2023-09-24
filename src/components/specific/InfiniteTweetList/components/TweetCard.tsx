@@ -10,11 +10,13 @@ import { useSession } from "next-auth/react";
 import { SkeletonTweetCard } from "./SkeletonTweetCard";
 import { useRouter } from "next/router";
 import { CommentButton } from "./CommentButton";
+import Image from "next/image";
 
 export const TweetCard = ({
   id,
   user,
   content,
+  images,
   createdAt,
   likeCount,
   commentCount,
@@ -64,6 +66,17 @@ export const TweetCard = ({
           )}
         </div>
         <p className="whitespace-pre-wrap">{content}</p>
+        <div className="flex flex-row flex-wrap gap-4 pt-2">
+          {images?.map((image) => (
+            <Image
+              key={image.id}
+              src={image.url}
+              width={250}
+              height={250}
+              alt="Imported image"
+            />
+          ))}
+        </div>
         <div className="mt-2 flex gap-8">
           <HeartButton
             onClick={handleToggleLike}

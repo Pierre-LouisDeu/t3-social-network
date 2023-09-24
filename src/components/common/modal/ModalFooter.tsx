@@ -17,7 +17,7 @@ export const ModalFooter = ({
 }: ModalFooterProps) => {
   return (
     <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
-      {confirm && (
+      {confirm && title && (
         <button
           type="button"
           className={`inline-flex w-full justify-center rounded-md ${

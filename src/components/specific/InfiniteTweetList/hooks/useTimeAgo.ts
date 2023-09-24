@@ -18,13 +18,13 @@ export const useTimeAgo = (date: Date): string => {
       if (secSinceDate < secInOneMin) {
         setTimeAgo("just now");
       } else if (secSinceDate < secInOneHour) {
-        setTimeAgo(`${Math.floor(secSinceDate / secInOneMin)} minutes ago`);
+        setTimeAgo(`${Math.floor(secSinceDate / secInOneMin)} min`);
       } else if (secSinceDate < secSinceToday) {
-        setTimeAgo(`${Math.floor(secSinceDate / secInOneHour)} hours ago`);
+        setTimeAgo(`${Math.floor(secSinceDate / secInOneHour)}h`);
       } else if (secSinceDate < secSinceYesterday) {
         setTimeAgo("yesterday");
       } else {
-        setTimeAgo(dayjs(date).format("DD/MM/YYYY[,] HH:mm"));
+        setTimeAgo(dayjs(date).format("DD MMM YYYY"));
       }
     }, 1000);
     return () => clearInterval(interval);

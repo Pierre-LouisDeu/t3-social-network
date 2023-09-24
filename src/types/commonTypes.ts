@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const Address = z.object({
+export const zAddress = z.object({
   latitude: z.number().optional(),
   longitude: z.number().optional(),
   country: z.string().optional(),
@@ -8,11 +8,20 @@ export const Address = z.object({
   road: z.string().optional(),
 });
 
-export type AddressType = z.infer<typeof Address>;
+export const zImage = z.array(
+  z.object({
+    id: z.string(),
+    url: z.string(),
+  })
+);
+
+export type AddressType = z.infer<typeof zAddress>;
+export type ImageType = z.infer<typeof zImage>;
 
 export type Tweet = {
   id: string;
   content: string;
+  images: ImageType;
   createdAt: Date;
   likeCount: number;
   commentCount: number;
@@ -29,7 +38,6 @@ export type CommentCardType = {
   setTweetIsLoading?: (isLoading: boolean) => void;
   hideCommentBtn?: boolean;
   hideDeleteBtn?: boolean;
-
 };
 
 export type Comment = {

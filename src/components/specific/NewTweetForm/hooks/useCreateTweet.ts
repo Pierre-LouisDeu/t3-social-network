@@ -1,8 +1,9 @@
 import { useSession } from "next-auth/react";
 import { useState, type FormEvent } from "react";
+import { type UploadFileResponse } from "uploadthing/client";
 import { api } from "~/utils/api";
 
-type UseToggleLikeProps = {
+type UseCreateTweetProps = {
   address: {
     latitude?: number;
     longitude?: number;
@@ -12,6 +13,8 @@ type UseToggleLikeProps = {
   } | null;
   inputValue: string;
   setInputValue: (value: string) => void;
+  imagesUploaded: UploadFileResponse[];
+  setImagesUploaded: (images: UploadFileResponse[]) => void;
 };
 
 type UseCreateTweetType = {
@@ -24,7 +27,9 @@ export const useCreateTweet = ({
   address,
   inputValue,
   setInputValue,
-}: UseToggleLikeProps): UseCreateTweetType => {
+  imagesUploaded,
+  setImagesUploaded,
+}: UseCreateTweetProps): UseCreateTweetType => {
   const session = useSession();
   const trpcUtils = api.useContext();
 
@@ -41,6 +46,7 @@ export const useCreateTweet = ({
       setError(null);
 
       setInputValue("");
+      setImagesUploaded([]);
 
       if (session.status !== "authenticated") return;
 
@@ -52,6 +58,10 @@ export const useCreateTweet = ({
           likeCount: 0,
           commentCount: 0,
           likedByMe: false,
+          images: imagesUploaded.map((image) => ({
+            id: image.key,
+            url: image.url,
+          })),
           user: {
             id: session.data.user.id,
             name: session.data.user.name || null,
@@ -88,6 +98,10 @@ export const useCreateTweet = ({
 
     createTweet.mutate({
       content: inputValue,
+      images: imagesUploaded.map((image) => ({
+        id: image.key,
+        url: image.url,
+      })),
       address: {
         latitude: address?.latitude,
         longitude: address?.longitude,

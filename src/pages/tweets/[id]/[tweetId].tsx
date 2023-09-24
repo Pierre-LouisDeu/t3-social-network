@@ -107,6 +107,7 @@ const ProfilePage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
           id={tweet?.id}
           user={tweet?.user}
           content={tweet?.content}
+          images={tweet?.images}
           createdAt={tweet?.createdAt}
           likeCount={tweet?._count.likes}
           commentCount={tweet?._count.comment}

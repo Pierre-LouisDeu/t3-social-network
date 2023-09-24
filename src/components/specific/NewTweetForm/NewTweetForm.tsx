@@ -7,6 +7,8 @@ import { useLocation } from "./hooks/useLocation";
 import { LoadingSpinner } from "~/components/common/icons/LoadingSpinner";
 import { notifyError } from "~/components/common/toasts/toast";
 import { UploadImageButton } from "./components/UploadButton";
+import { type UploadFileResponse } from "uploadthing/client";
+import Image from "next/image";
 
 function updateTextAreaSize(textArea?: HTMLTextAreaElement) {
   if (textArea == null) return;
@@ -22,25 +24,31 @@ export function NewTweetForm() {
 }
 
 function Form() {
-  const [inputValue, setInputValue] = useState<string>("");
-  const textAreaRef = useRef<HTMLTextAreaElement>();
-  const inputRef = useCallback((textArea: HTMLTextAreaElement) => {
-    updateTextAreaSize(textArea);
-    textAreaRef.current = textArea;
-  }, []);
   const session = useSession();
   const { address } = useLocation();
+  const [inputValue, setInputValue] = useState<string>("");
+  const [imagesUploaded, setImagesUploaded] = useState<UploadFileResponse[]>(
+    []
+  );
+  const textAreaRef = useRef<HTMLTextAreaElement>();
   const { handleCreateTweet, isLoading, error } = useCreateTweet({
     address,
     inputValue,
     setInputValue,
+    imagesUploaded,
+    setImagesUploaded,
   });
+
+  const inputRef = useCallback((textArea: HTMLTextAreaElement) => {
+    updateTextAreaSize(textArea);
+    textAreaRef.current = textArea;
+  }, []);
 
   useLayoutEffect(() => {
     updateTextAreaSize(textAreaRef.current);
   }, [inputValue]);
 
-  const validTweet = inputValue.length === 0 || inputValue.length > 280;
+  const invalidTweet = inputValue.length === 0 || inputValue.length > 280;
 
   if (session.status !== "authenticated") return null;
 
@@ -64,11 +72,22 @@ function Form() {
           placeholder="What's happening?"
         />
       </div>
+      <div className="ml-16 flex flex-row flex-wrap gap-4 px-4">
+        {imagesUploaded.map((image) => (
+          <Image
+            key={image.key}
+            src={image.url}
+            width={250}
+            height={250}
+            alt="Imported image"
+          />
+        ))}
+      </div>
       <div className="flex gap-2 self-end">
-        <UploadImageButton />
+        <UploadImageButton onUpload={setImagesUploaded} />
         <Button
           className="h-10 w-24"
-          disabled={validTweet}
+          disabled={invalidTweet || !imagesUploaded}
           onClick={handleCreateTweet}
         >
           {isLoading ? <LoadingSpinner size={6} /> : "Tweet"}

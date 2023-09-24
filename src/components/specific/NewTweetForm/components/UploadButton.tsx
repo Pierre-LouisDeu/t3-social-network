@@ -6,12 +6,21 @@ import { ModalFooter } from "~/components/common/modal/ModalFooter";
 import useModal from "~/hooks/useModal";
 import { UploadDropzone } from "~/utils/uploadthing";
 import { type Json, type UploadThingError } from "@uploadthing/shared";
+import { type UploadFileResponse } from "uploadthing/client";
+import { getPlural } from "~/utils/utils";
 
-export const UploadImageButton = () => {
+type UploadImageButtonProps = {
+  onUpload: (imageUrl: UploadFileResponse[]) => void;
+};
+
+export const UploadImageButton = ({ onUpload }: UploadImageButtonProps) => {
   const { open, setOpen, initialFocus } = useModal();
 
-  const confirmUpload = () => {
-    notifySuccess({ message: "Image uploaded" });
+  const confirmUpload = (images: UploadFileResponse[]) => {
+    onUpload(images);
+    notifySuccess({
+      message: getPlural(images.length, "Image uploaded", "Images uploaded"),
+    });
     setOpen(false);
   };
 
@@ -36,9 +45,11 @@ export const UploadImageButton = () => {
         />
         <div className="pb-6 pt-8">
           <UploadDropzone
-            className="ut-button:mt-4 ut-button:w-24 ut-button:bg-blue-400 ut-button:p-2 ut-button:text-sm ut-allowed-content:text-sm ut-allowed-content:text-blue-400 ut-label:text-sm ut-label:font-normal ut-label:text-gray-500 ut-upload-icon:text-blue-400"
+            className="ut-button:mt-4 ut-button:w-32 ut-button:bg-blue-400 ut-button:p-2 ut-button:text-sm ut-allowed-content:text-sm ut-allowed-content:text-blue-400 ut-label:text-sm ut-label:font-normal ut-label:text-gray-500 ut-upload-icon:text-blue-400"
             endpoint="imageUploader"
-            onClientUploadComplete={confirmUpload}
+            onClientUploadComplete={(res: UploadFileResponse[] | undefined) =>
+              confirmUpload(res ?? [])
+            }
             onUploadError={(error) => handleUploadError(error)}
           />
         </div>
