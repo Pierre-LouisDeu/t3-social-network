@@ -32,7 +32,7 @@ export const TweetCard = ({
   const { handleToggleLike, loadingLikes } = useToggleLike({ id, user });
   const { handleDeleteTweet } = useDeleteTweet({ id, user });
 
-  if (!tweetDate || !content || !user) {
+  if (!tweetDate || (!content && !images) || !user) {
     setTweetIsLoading && setTweetIsLoading(true);
     return <SkeletonTweetCard />;
   } else {

@@ -7,6 +7,7 @@ import { useLocation } from "./hooks/useLocation";
 import { LoadingSpinner } from "~/components/common/icons/LoadingSpinner";
 import { notifyError } from "~/components/common/toasts/toast";
 import { UploadImageButton } from "./components/UploadButton";
+import { MdCancel } from "react-icons/md";
 import { type UploadFileResponse } from "uploadthing/client";
 import Image from "next/image";
 
@@ -59,6 +60,11 @@ function Form() {
     return null;
   }
 
+  const removeImage = (key: string) => {
+    const updatedImages = imagesUploaded.filter((image) => image.key !== key);
+    setImagesUploaded(updatedImages);
+  };
+
   return (
     <div className="flex flex-col gap-2 border-y px-4 py-2">
       <div className="flex gap-4">
@@ -77,14 +83,19 @@ function Form() {
       <div className="pl-20">
         <div className="flex flex-row flex-wrap gap-4">
           {imagesUploaded.map((image) => (
-            <Image
-              className="rounded-lg"
-              key={image.key}
-              src={image.url}
-              width={250}
-              height={250}
-              alt="Imported image"
-            />
+            <div key={image.key} className="relative rounded-lg">
+              <Image
+                className="rounded-lg"
+                src={image.url}
+                width={250}
+                height={250}
+                alt="Imported image"
+              />
+              <MdCancel
+                className="absolute right-2 top-2 h-6 w-6 cursor-pointer text-gray-700 hover:text-gray-600"
+                onClick={() => removeImage(image.key)}
+              />
+            </div>
           ))}
         </div>
         <div className="flex justify-between gap-2 pt-2">
