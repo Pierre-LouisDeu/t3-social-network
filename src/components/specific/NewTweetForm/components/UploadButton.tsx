@@ -1,4 +1,4 @@
-import { VscCloudUpload } from "react-icons/vsc";
+import { IoImageOutline } from "react-icons/io5";
 import { notifyError, notifySuccess } from "~/components/common/toasts/toast";
 import { Modal } from "~/components/common/modal/Modal";
 import { ModalHeader } from "~/components/common/modal/ModalHeader";
@@ -33,9 +33,9 @@ export const UploadImageButton = ({ onUpload }: UploadImageButtonProps) => {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="flex h-10 w-24 items-center justify-center"
+        className="flex h-10 w-8 items-center justify-center"
       >
-        <VscCloudUpload className="h-8 w-8 fill-blue-400 stroke-blue-400 hover:fill-blue-300" />
+        <IoImageOutline className="h-8 w-8 fill-blue-400 stroke-blue-400 hover:fill-blue-300" />
       </button>
       <Modal open={open} setOpen={setOpen} initialFocus={initialFocus}>
         <ModalHeader
@@ -45,7 +45,7 @@ export const UploadImageButton = ({ onUpload }: UploadImageButtonProps) => {
         />
         <div className="pb-6 pt-8">
           <UploadDropzone
-            className="ut-button:mt-4 ut-button:w-32 ut-button:bg-blue-400 ut-button:p-2 ut-button:text-sm ut-allowed-content:text-sm ut-allowed-content:text-blue-400 ut-label:text-sm ut-label:font-normal ut-label:text-gray-500 ut-upload-icon:text-blue-400"
+            className="border-none ut-button:mt-4 ut-button:w-32 ut-button:bg-blue-400 ut-button:p-2 ut-button:text-sm ut-allowed-content:text-sm ut-allowed-content:text-blue-400 ut-label:text-sm ut-label:font-normal ut-label:text-gray-500 ut-upload-icon:text-blue-400"
             endpoint="imageUploader"
             onClientUploadComplete={(res: UploadFileResponse[] | undefined) =>
               confirmUpload(res ?? [])

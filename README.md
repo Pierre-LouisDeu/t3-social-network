@@ -35,6 +35,7 @@ A basic social network built with the T3 stack using Next.js, NextAuth, Prisma, 
   - [x] Add a modal to upload images
   - [x] Update front to handle images in tweets
   - [ ] Add images to comments
+  - [ ] Add skeleton loading for images
   - [ ] Delete images automatically in [uploadthings](https://uploadthing.com/dashboard)
 - [ ] Add websockets and real-time chat
 - [ ] Add error pages (error 404, etc.)
@@ -53,8 +54,8 @@ A basic social network built with the T3 stack using Next.js, NextAuth, Prisma, 
 - [x] Fix the location of the tweets (when a part is missing)
 - [x] Fix the toasts color (500 -> 400)
 - [x] Fix useless full-text search queries
-- [ ] Update error handling in tweets list
-- [ ] Put the search button in the profile menu only + add counter
+- [x] Update error handling in tweets list
+- [ ] Replace location by an icon
 - [ ] Refacto DS
 
 ### CI/CD & Tech

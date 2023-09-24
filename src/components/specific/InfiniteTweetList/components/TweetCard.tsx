@@ -69,6 +69,7 @@ export const TweetCard = ({
         <div className="flex flex-row flex-wrap gap-4 pt-2">
           {images?.map((image) => (
             <Image
+              className="rounded-lg"
               key={image.id}
               src={image.url}
               width={250}

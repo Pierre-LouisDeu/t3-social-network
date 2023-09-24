@@ -48,7 +48,9 @@ function Form() {
     updateTextAreaSize(textAreaRef.current);
   }, [inputValue]);
 
-  const invalidTweet = inputValue.length === 0 || inputValue.length > 280;
+  const invalidTweet =
+    (inputValue.length === 0 && imagesUploaded.length === 0) ||
+    inputValue.length > 280;
 
   if (session.status !== "authenticated") return null;
 
@@ -72,26 +74,31 @@ function Form() {
           placeholder="What's happening?"
         />
       </div>
-      <div className="ml-16 flex flex-row flex-wrap gap-4 px-4">
-        {imagesUploaded.map((image) => (
-          <Image
-            key={image.key}
-            src={image.url}
-            width={250}
-            height={250}
-            alt="Imported image"
-          />
-        ))}
-      </div>
-      <div className="flex gap-2 self-end">
-        <UploadImageButton onUpload={setImagesUploaded} />
-        <Button
-          className="h-10 w-24"
-          disabled={invalidTweet || !imagesUploaded}
-          onClick={handleCreateTweet}
-        >
-          {isLoading ? <LoadingSpinner size={6} /> : "Tweet"}
-        </Button>
+      <div className="pl-20">
+        <div className="flex flex-row flex-wrap gap-4">
+          {imagesUploaded.map((image) => (
+            <Image
+              className="rounded-lg"
+              key={image.key}
+              src={image.url}
+              width={250}
+              height={250}
+              alt="Imported image"
+            />
+          ))}
+        </div>
+        <div className="flex justify-between gap-2 pt-2">
+          <UploadImageButton onUpload={setImagesUploaded} />
+          <div>
+            <Button
+              className="h-10 w-24"
+              disabled={invalidTweet}
+              onClick={handleCreateTweet}
+            >
+              {isLoading ? <LoadingSpinner size={6} /> : "Tweet"}
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
   );
