@@ -23,7 +23,7 @@ export function InfiniteCommentList({
 
   if (comments == null || comments.length === 0) {
     return (
-      <h2 className="my-4 text-center text-2xl text-gray-500">No Comments</h2>
+      <h2 className="my-4 text-center text-2xl text-gray-500">No comment</h2>
     );
   }
 

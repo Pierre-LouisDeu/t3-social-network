@@ -6,6 +6,7 @@ import { Button } from "../../common/buttons/Button";
 import { useLocation } from "./hooks/useLocation";
 import { LoadingSpinner } from "~/components/common/icons/LoadingSpinner";
 import { notifyError } from "~/components/common/toasts/toast";
+import { UploadImageButton } from "./components/UploadButton";
 
 function updateTextAreaSize(textArea?: HTMLTextAreaElement) {
   if (textArea == null) return;
@@ -49,10 +50,7 @@ function Form() {
   }
 
   return (
-    <form
-      onSubmit={handleCreateTweet}
-      className="flex flex-col gap-2 border-y px-4 py-2"
-    >
+    <div className="flex flex-col gap-2 border-y px-4 py-2">
       <div className="flex gap-4">
         <ProfileImage src={session.data.user.image} />
         <textarea
@@ -66,9 +64,16 @@ function Form() {
           placeholder="What's happening?"
         />
       </div>
-      <Button className="h-10 w-24 self-end" disabled={validTweet}>
-        {isLoading ? <LoadingSpinner size={6} /> : "Tweet"}
-      </Button>
-    </form>
+      <div className="flex gap-2 self-end">
+        <UploadImageButton />
+        <Button
+          className="h-10 w-24"
+          disabled={validTweet}
+          onClick={handleCreateTweet}
+        >
+          {isLoading ? <LoadingSpinner size={6} /> : "Tweet"}
+        </Button>
+      </div>
+    </div>
   );
 }

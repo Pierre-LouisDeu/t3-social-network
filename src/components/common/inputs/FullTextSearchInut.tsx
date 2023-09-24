@@ -11,7 +11,7 @@ function classNames(...classes: Array<string | boolean>) {
 export default function FullTextSearchInput() {
   const router = useRouter();
   const [open, setOpen] = useState<boolean>(false);
-  const [query, setQuery] = useState<string>("");
+  const [query, setQuery] = useState<string>("")
 
   const { data: tweets } = api.tweet.fullTextSearch.useQuery({
     query: query.toLowerCase(),
@@ -113,3 +113,4 @@ export default function FullTextSearchInput() {
     </>
   );
 }
+

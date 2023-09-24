@@ -3,6 +3,11 @@
 ## About
 A basic social network built with the T3 stack using Next.js, NextAuth, Prisma, tRCP and Tailwind. This project is based on a tutorial from Web Dev Simplified.
 
+## Notes
+- component: `sfc`
+- useEffect: `uef`
+- useState: `usfc`
+
 ## ToDo
 
 ### Features 
@@ -22,12 +27,14 @@ A basic social network built with the T3 stack using Next.js, NextAuth, Prisma, 
   - [x] Add the reply feature
   - [x] Fix like refetch
   - [ ] Update front end of the comment page
+- [ ] Add image upload to tweets with [uploadthings](https://uploadthing.com/dashboard)
+- [ ] Add websockets and real-time chat
 - [ ] Add error pages (error 404, etc.)
 - [ ] Responsive design
 - [ ] Add a dark mode
 - [ ] Update the front end of the login page
 - [ ] ~~Create login page and add classic auth (email + password)~~
-- [ ] Add image upload to tweets
+
 - [ ] Add emojis to tweets reactions
 - [ ] Add a "Map" menu to the sidebar
 
@@ -38,6 +45,7 @@ A basic social network built with the T3 stack using Next.js, NextAuth, Prisma, 
 - [x] Fix the style of the toasts
 - [x] Fix the location of the tweets (when a part is missing) 
 - [x] Fix the toasts color (500 -> 400) 
+- [x] Fix useless full-text search queries 
 - [ ] Update error handling in tweets list 
 - [ ] Put the search button in the profile menu only + add counter 
 - [ ] Refacto DS

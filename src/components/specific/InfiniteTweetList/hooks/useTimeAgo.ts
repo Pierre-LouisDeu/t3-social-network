@@ -24,7 +24,7 @@ export const useTimeAgo = (date: Date): string => {
       } else if (secSinceDate < secSinceYesterday) {
         setTimeAgo("yesterday");
       } else {
-        setTimeAgo(dayjs(date).format("DD/MM/YYYY HH:mm"));
+        setTimeAgo(dayjs(date).format("DD/MM/YYYY[,] HH:mm"));
       }
     }, 1000);
     return () => clearInterval(interval);
