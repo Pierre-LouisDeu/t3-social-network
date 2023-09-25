@@ -8,6 +8,7 @@ import { UploadDropzone } from "~/utils/uploadthing";
 import { type Json, type UploadThingError } from "@uploadthing/shared";
 import { type UploadFileResponse } from "uploadthing/client";
 import { getPlural } from "~/utils/utils";
+import { IconHoverEffect } from "~/components/common/icons/IconHoverEffect";
 
 type UploadImageButtonProps = {
   onUpload: (imageUrl: UploadFileResponse[]) => void;
@@ -31,12 +32,14 @@ export const UploadImageButton = ({ onUpload }: UploadImageButtonProps) => {
 
   return (
     <>
-      <button
-        onClick={() => setOpen(true)}
-        className="flex h-10 w-8 items-center justify-center"
-      >
-        <IoImageOutline className="h-8 w-8 fill-blue-400 stroke-blue-400 hover:fill-blue-300" />
-      </button>
+      <IconHoverEffect color="blue">
+        <button
+          onClick={() => setOpen(true)}
+          className="flex items-center justify-center"
+        >
+          <IoImageOutline className="h-6 w-6 cursor-pointer fill-blue-400 stroke-blue-400" />
+        </button>
+      </IconHoverEffect>
       <Modal open={open} setOpen={setOpen} initialFocus={initialFocus}>
         <ModalHeader
           modalType="confirm"

@@ -25,7 +25,7 @@ export const TrashButton = ({ onClick }: HeartButtonProps) => {
         onClick={() => setOpen(!open)}
         className="group flex items-center gap-1 self-start text-gray-500 transition-colors duration-200 hover:text-red-500 focus-visible:text-red-500"
       >
-        <IconHoverEffect red>
+        <IconHoverEffect color="red">
           <VscTrash className="fill-gray-500 transition-colors duration-200 group-hover:fill-red-500 group-focus-visible:fill-red-500" />
         </IconHoverEffect>
       </button>

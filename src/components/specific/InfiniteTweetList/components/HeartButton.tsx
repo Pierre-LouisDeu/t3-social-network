@@ -37,7 +37,7 @@ export const HeartButton = ({
           : "text-gray-500 hover:text-red-500 focus-visible:text-red-500"
       }`}
     >
-      <IconHoverEffect red>
+      <IconHoverEffect color="red">
         <HeartIcon
           className={`transition-colors duration-200 ${
             likedByMe
