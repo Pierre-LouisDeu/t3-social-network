@@ -7,10 +7,18 @@ import { useSession } from "next-auth/react";
 import { SkeletonTweetCard } from "./SkeletonTweetCard";
 import { useDeleteComment } from "../hooks/useDeleteComment";
 
-export const CommentCard = ({ id, tweetId, user, content, createdAt }: Comment) => {
+export const CommentCard = ({
+  id,
+  tweetId,
+  user,
+  content,
+  createdAt,
+}: Comment) => {
   const session = useSession();
   const tweetDate = useTimeAgo(createdAt);
   const { handleDeleteComment } = useDeleteComment({ id, tweetId });
+
+  const myId = session?.data?.user.id;
 
   if (!tweetDate || !content || !user) {
     return <SkeletonTweetCard />;
@@ -34,9 +42,7 @@ export const CommentCard = ({ id, tweetId, user, content, createdAt }: Comment) 
         </div>
         <p className="whitespace-pre-wrap">{content}</p>
         <div className="mt-2 flex gap-8">
-          {user.id === session?.data?.user.id && (
-            <TrashButton onClick={handleDeleteComment} />
-          )}
+          {user.id === myId && <TrashButton onClick={handleDeleteComment} />}
         </div>
       </div>
     </li>

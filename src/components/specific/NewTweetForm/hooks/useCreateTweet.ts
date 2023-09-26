@@ -1,6 +1,7 @@
 import { useSession } from "next-auth/react";
-import { useState, type FormEvent } from "react";
+import { type FormEvent } from "react";
 import { type UploadFileResponse } from "uploadthing/client";
+import { notifyError } from "~/components/common/toasts/toast";
 import { api } from "~/utils/api";
 
 type UseCreateTweetProps = {
@@ -20,7 +21,6 @@ type UseCreateTweetProps = {
 type UseCreateTweetType = {
   handleCreateTweet: (e: FormEvent<Element>) => void;
   isLoading: boolean;
-  error: string | null;
 };
 
 export const useCreateTweet = ({
@@ -34,17 +34,12 @@ export const useCreateTweet = ({
   const trpcUtils = api.useContext();
 
   const createTweet = api.tweet.create.useMutation({
-    onMutate: () => {
-      setIsLoading(true);
-    },
     onError: (clientErrorBase) => {
-      setIsLoading(false);
-      setError(clientErrorBase.message);
+      notifyError({
+        message: clientErrorBase.message ?? "Failed to create tweet",
+      });
     },
     onSuccess: (newTweet) => {
-      setIsLoading(false);
-      setError(null);
-
       setInputValue("");
       setImagesUploaded([]);
 
@@ -90,9 +85,6 @@ export const useCreateTweet = ({
     },
   });
 
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
-
   function handleCreateTweet(e: FormEvent) {
     e.preventDefault();
 
@@ -112,5 +104,5 @@ export const useCreateTweet = ({
     });
   }
 
-  return { handleCreateTweet, isLoading, error };
+  return { handleCreateTweet, isLoading: createTweet.isLoading };
 };

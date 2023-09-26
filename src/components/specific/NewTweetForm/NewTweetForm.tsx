@@ -5,7 +5,6 @@ import { ProfileImage } from "../../common/icons/ProfileImage";
 import { Button } from "../../common/buttons/Button";
 import { useLocation } from "./hooks/useLocation";
 import { LoadingSpinner } from "~/components/common/icons/LoadingSpinner";
-import { notifyError } from "~/components/common/toasts/toast";
 import { UploadImageButton } from "./components/UploadButton";
 import { MdCancel } from "react-icons/md";
 import { type UploadFileResponse } from "uploadthing/client";
@@ -32,7 +31,7 @@ function Form() {
     []
   );
   const textAreaRef = useRef<HTMLTextAreaElement>();
-  const { handleCreateTweet, isLoading, error } = useCreateTweet({
+  const { handleCreateTweet, isLoading } = useCreateTweet({
     address,
     inputValue,
     setInputValue,
@@ -54,11 +53,6 @@ function Form() {
     inputValue.length > 280;
 
   if (session.status !== "authenticated") return null;
-
-  if (error) {
-    notifyError({ message: error });
-    return null;
-  }
 
   const removeImage = (key: string) => {
     const updatedImages = imagesUploaded.filter((image) => image.key !== key);

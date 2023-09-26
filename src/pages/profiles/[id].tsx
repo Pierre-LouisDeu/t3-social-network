@@ -16,6 +16,7 @@ import { InfiniteTweetList } from "~/components/specific/InfiniteTweetList/Infin
 import FollowButton from "~/components/specific/header/FollowButton";
 import { LoadingSpinner } from "~/components/common/icons/LoadingSpinner";
 import { getPlural } from "~/utils/utils";
+import { useFollowUser } from "~/components/specific/InfiniteTweetList/hooks/useFollowUser";
 
 const ProfilePage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   id,
@@ -27,21 +28,7 @@ const ProfilePage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
     { getNextPageParam: (lastPage) => lastPage.nextCursor }
   );
 
-  const trpcUtils = api.useContext();
-  const toggleFollow = api.profile.toggleFollow.useMutation({
-    onSuccess: ({ addedFollow }) => {
-      trpcUtils.profile.getById.setData({ id }, (oldData) => {
-        if (oldData == null) return;
-
-        const countModifier = addedFollow ? 1 : -1;
-        return {
-          ...oldData,
-          isFollowing: addedFollow,
-          followersCount: oldData.followersCount + countModifier,
-        };
-      });
-    },
-  });
+  const { handleFollowUser, loadingFollow } = useFollowUser({ id });
 
   if (isLoading) {
     return <LoadingSpinner />;
@@ -82,9 +69,9 @@ const ProfilePage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
         </div>
         <FollowButton
           isFollowing={profile.isFollowing}
-          isLoading={toggleFollow.isLoading}
+          isLoading={loadingFollow}
           userId={id}
-          onClick={() => toggleFollow.mutate({ userId: id })}
+          onClick={handleFollowUser}
         />
       </header>
       <main>

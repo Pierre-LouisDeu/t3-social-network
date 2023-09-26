@@ -15,18 +15,16 @@ import { TweetCard } from "~/components/specific/InfiniteTweetList/components/Tw
 import { LoadingSpinner } from "~/components/common/icons/LoadingSpinner";
 import FollowButton from "~/components/specific/header/FollowButton";
 import { ssgHelper } from "~/server/api/ssgHelper";
-import { useSession } from "next-auth/react";
 import { NewCommentForm } from "~/components/specific/NewTweetForm/NewCommentForm";
 import { InfiniteCommentList } from "~/components/specific/InfiniteTweetList/InfiniteCommentList";
 import { useState } from "react";
+import { useFollowUser } from "~/components/specific/InfiniteTweetList/hooks/useFollowUser";
 
 const ProfilePage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   id,
   tweetId,
 }) => {
-  const session = useSession();
   const [tweetIsLoading, setTweetIsLoading] = useState<boolean>(true);
-  const userId = session?.data?.user.id ?? "";
 
   const { data: tweet, isLoading: loadingTweet } = api.tweet.getById.useQuery({
     id: tweetId,
@@ -37,26 +35,12 @@ const ProfilePage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
       id,
     });
 
+  const { handleFollowUser, loadingFollow } = useFollowUser({ id });
+
   const comments = api.comment.infiniteFeed.useInfiniteQuery(
     { tweetId },
     { getNextPageParam: (lastPage) => lastPage.nextCursor }
   );
-
-  const trpcUtils = api.useContext();
-  const toggleFollow = api.profile.toggleFollow.useMutation({
-    onSuccess: ({ addedFollow }) => {
-      trpcUtils.profile.getById.setData({ id: userId }, (oldData) => {
-        if (oldData == null) return;
-
-        const countModifier = addedFollow ? 1 : -1;
-        return {
-          ...oldData,
-          isFollowing: addedFollow,
-          followersCount: oldData.followersCount + countModifier,
-        };
-      });
-    },
-  });
 
   if (loadingTweet || loadingProfile) {
     return <LoadingSpinner />;
@@ -97,9 +81,9 @@ const ProfilePage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
         </div>
         <FollowButton
           isFollowing={profile.isFollowing}
-          isLoading={toggleFollow.isLoading}
+          isLoading={loadingFollow}
           userId={id}
-          onClick={() => toggleFollow.mutate({ userId: id })}
+          onClick={handleFollowUser}
         />
       </header>
       <main>

@@ -1,5 +1,6 @@
 import { useSession } from "next-auth/react";
-import { useState, type FormEvent } from "react";
+import { type FormEvent } from "react";
+import { notifyError } from "~/components/common/toasts/toast";
 import { api } from "~/utils/api";
 
 type UseToggleLikeProps = {
@@ -11,7 +12,6 @@ type UseToggleLikeProps = {
 type UseCreateCommentType = {
   handleCreateComment: (e: FormEvent<Element>) => void;
   isLoading: boolean;
-  error: string | null;
 };
 
 export const useCreateComment = ({
@@ -23,17 +23,10 @@ export const useCreateComment = ({
   const trpcUtils = api.useContext();
 
   const createComment = api.comment.create.useMutation({
-    onMutate: () => {
-      setIsLoading(true);
-    },
-    onError: (clientErrorBase) => {
-      setIsLoading(false);
-      setError(clientErrorBase.message);
+    onError: (error) => {
+      notifyError({ message: error.message ?? "Failed to create comment" });
     },
     onSuccess: (newComment) => {
-      setIsLoading(false);
-      setError(null);
-
       setInputValue("");
 
       if (session.status !== "authenticated") return;
@@ -65,9 +58,6 @@ export const useCreateComment = ({
     },
   });
 
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
-
   function handleCreateComment(e: FormEvent) {
     e.preventDefault();
 
@@ -77,5 +67,5 @@ export const useCreateComment = ({
     });
   }
 
-  return { handleCreateComment, isLoading, error };
+  return { handleCreateComment, isLoading: createComment.isLoading };
 };
