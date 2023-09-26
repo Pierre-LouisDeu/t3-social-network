@@ -12,7 +12,7 @@ const handleAuth = async (req: NextApiRequest, res: NextApiResponse) => {
 };
 
 export const ourFileRouter = {
-  imageUploader: f({ image: { maxFileSize: "4MB", maxFileCount: 4 } })
+  imageUploader: f({ image: { maxFileSize: "4MB", maxFileCount: 3 } })
     .middleware(async ({ req, res }) => {
       const user = await handleAuth(req, res);
       if (!user) throw new Error("Unauthorized");

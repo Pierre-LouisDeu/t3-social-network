@@ -72,7 +72,7 @@ export const TweetCard = ({
               {popoverOpenDate && (
                 <Popover.Panel
                   static
-                  className="absolute z-10 mt-2 w-64 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none px-2"
+                  className="absolute bottom-full z-10 mb-2 w-52 rounded-md bg-white/80 px-3 text-xs text-gray-700 shadow-lg ring-1 ring-black ring-opacity-5 backdrop-blur-md focus:outline-none"
                 >
                   {dayjs(createdAt).format("h:mm A - MMMM D, YYYY")}
                 </Popover.Panel>
@@ -92,25 +92,23 @@ export const TweetCard = ({
               {popoverOpenLoc && (
                 <Popover.Panel
                   static
-                  className="absolute z-10 mt-2 w-56 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                  className="absolute bottom-full z-20 mb-2 w-44 rounded-md bg-white/80 shadow-lg ring-1 ring-black ring-opacity-5 backdrop-blur-md focus:outline-none"
                 >
-                  <div className="py-1">
-                    {address.road && (
-                      <div className="block px-4 py-2 text-gray-700">
-                        {address.road}
-                      </div>
-                    )}
-                    {address.town && (
-                      <div className="block px-4 py-2 text-gray-700">
-                        {address.town}
-                      </div>
-                    )}
-                    {address.country && (
-                      <div className="block px-4 py-2 text-gray-700">
-                        {address.country}
-                      </div>
-                    )}
-                  </div>
+                  {address.road && (
+                    <div className="block px-4 py-2 text-sm text-gray-700">
+                      {address.road}
+                    </div>
+                  )}
+                  {address.town && (
+                    <div className="block px-4 py-2 text-sm text-gray-700">
+                      {address.town}
+                    </div>
+                  )}
+                  {address.country && (
+                    <div className="block px-4 py-2 text-sm text-gray-700">
+                      {address.country}
+                    </div>
+                  )}
                 </Popover.Panel>
               )}
             </Popover>
