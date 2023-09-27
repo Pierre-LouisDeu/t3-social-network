@@ -8,6 +8,7 @@ import {
   protectedProcedure,
   createTRPCContext,
 } from "~/server/api/trpc";
+import { zImage } from "~/types/commonTypes";
 
 export const commentRouter = createTRPCRouter({
   getById: publicProcedure
@@ -18,6 +19,9 @@ export const commentRouter = createTRPCRouter({
         select: {
           id: true,
           content: true,
+          images: {
+            select: { id: true, url: true },
+          },
           createdAt: true,
           user: {
             select: { name: true, id: true, image: true },
@@ -47,15 +51,23 @@ export const commentRouter = createTRPCRouter({
     .input(
       z.object({
         content: z.string(),
+        images: zImage,
         tweetId: z.string(),
       })
     )
-    .mutation(async ({ input: { content, tweetId }, ctx }) => {
+    .mutation(async ({ input: { content, images, tweetId }, ctx }) => {
       const currentUserId = ctx.session?.user.id;
 
       const comment = await ctx.prisma.comment.create({
         data: {
           content,
+          images: {
+            create: images?.map((image) => ({
+              id: image.id,
+              url: image.url,
+              tweet: { connect: { id: tweetId } }, // TODO: remove this line and fix the issue 
+            })),
+          },
           tweetId,
           userId: currentUserId,
         },
@@ -107,6 +119,9 @@ async function getInfiniteComments({
       id: true,
       tweetId: true,
       content: true,
+      images: {
+        select: { id: true, url: true },
+      },
       createdAt: true,
       user: {
         select: { name: true, id: true, image: true },
@@ -128,6 +143,10 @@ async function getInfiniteComments({
         id: comment.id,
         tweetId: comment.tweetId,
         content: comment.content,
+        images: comment.images?.map((image) => ({
+          id: image.id,
+          url: image.url,
+        })),
         createdAt: comment.createdAt,
         user: comment.user,
       };

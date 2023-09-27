@@ -34,8 +34,8 @@ A basic social network built with the T3 stack using Next.js, NextAuth, Prisma, 
   - [x] Add a button to upload images
   - [x] Add a modal to upload images
   - [x] Update front to handle images in tweets
+  - [x] Add images to comments
   - [ ] Copy/paste images
-  - [ ] Add images to comments
   - [ ] Add skeleton loading for images
   - [ ] Delete images automatically in [uploadthings](https://uploadthing.com/dashboard)
 - [ ] Add websockets and real-time chat

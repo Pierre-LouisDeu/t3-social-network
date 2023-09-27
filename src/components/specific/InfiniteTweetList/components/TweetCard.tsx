@@ -8,14 +8,12 @@ import { useSession } from "next-auth/react";
 import { SkeletonTweetCard } from "./SkeletonTweetCard";
 import { useRouter } from "next/router";
 import { CommentButton } from "./CommentButton";
-import { IoLocationSharp } from "react-icons/io5";
-import { Popover } from "@headlessui/react";
 import Image from "next/image";
 import { useState } from "react";
-import { IconHoverEffect } from "~/components/common/icons/IconHoverEffect";
-import dayjs from "dayjs";
-import { ProfilePopover } from "./ProfilePopover";
+import { ProfilePopover } from "../../../common/popover/ProfilePopover";
 import Link from "next/link";
+import { LocationPopover } from "~/components/common/popover/LocationPopover";
+import { DatePopover } from "~/components/common/popover/DatePopover";
 
 export const TweetCard = ({
   id,
@@ -30,6 +28,7 @@ export const TweetCard = ({
   setTweetIsLoading,
   hideCommentBtn = false,
   hideDeleteBtn = false,
+  first = false,
 }: Tweet & CommentCardType) => {
   const router = useRouter();
   const session = useSession();
@@ -54,84 +53,51 @@ export const TweetCard = ({
         user={user}
         popoverOpenProfile={popoverOpenProfile}
         setPopoverOpenProfile={setPopoverOpenProfile}
+        first={first}
       />
       <div className="flex flex-grow flex-col">
         <div className="flex items-center gap-2">
           <Link
             href={`/profiles/${user.id}`}
             onMouseEnter={() => setPopoverOpenProfile(true)}
-            onMouseLeave={() => setPopoverOpenProfile(false)}
             className="font-bold outline-none hover:underline focus-visible:underline"
           >
             {user.name}
           </Link>
           <span className="text-gray-500">-</span>
           <div className="text-gray-500">
-            <Popover className="relative inline-block text-left">
-              <span
-                className="h-5 w-5 cursor-pointer fill-blue-400 hover:underline focus-visible:underline"
-                onMouseEnter={() => setPopoverOpenDate(true)}
-                onMouseLeave={() => setPopoverOpenDate(false)}
-              >
-                {tweetDate}
-              </span>
-              {popoverOpenDate && (
-                <Popover.Panel
-                  static
-                  className="absolute bottom-full z-20 mb-2 w-52 rounded-md bg-white/80 px-3 py-2 text-xs text-gray-700 shadow-lg ring-1 ring-black ring-opacity-5 backdrop-blur-md focus:outline-none"
-                >
-                  {dayjs(createdAt).format("h:mm A - MMMM D, YYYY")}
-                </Popover.Panel>
-              )}
-            </Popover>
+            <DatePopover
+              tweetDate={tweetDate}
+              createdAt={createdAt}
+              popoverOpenDate={popoverOpenDate}
+              setPopoverOpenDate={setPopoverOpenDate}
+              first={first}
+            />
           </div>
           <span className="hidden text-gray-500 md:block">-</span>
           {address && (
-            <Popover className="relative inline-block text-left">
-              <IconHoverEffect color="blue" className="relative right-2">
-                <IoLocationSharp
-                  className="h-5 w-5 cursor-pointer fill-blue-400"
-                  onMouseEnter={() => setPopoverOpenLoc(true)}
-                  onMouseLeave={() => setPopoverOpenLoc(false)}
-                />
-              </IconHoverEffect>
-              {popoverOpenLoc && (
-                <Popover.Panel
-                  static
-                  className="absolute bottom-full z-20 mb-2 w-44 rounded-md bg-white/80 shadow-lg ring-1 ring-black ring-opacity-5 backdrop-blur-md focus:outline-none"
-                >
-                  {address.road && (
-                    <div className="block px-4 py-2 text-sm text-gray-700">
-                      {address.road}
-                    </div>
-                  )}
-                  {address.town && (
-                    <div className="block px-4 py-2 text-sm text-gray-700">
-                      {address.town}
-                    </div>
-                  )}
-                  {address.country && (
-                    <div className="block px-4 py-2 text-sm text-gray-700">
-                      {address.country}
-                    </div>
-                  )}
-                </Popover.Panel>
-              )}
-            </Popover>
+            <LocationPopover
+              address={address}
+              popoverOpenLoc={popoverOpenLoc}
+              setPopoverOpenLoc={setPopoverOpenLoc}
+              first={first}
+            />
           )}
         </div>
-        <p className="whitespace-pre-wrap">{content}</p>
-        <div className="flex flex-row flex-wrap gap-4">
-          {images?.map((image) => (
-            <Image
-              className="rounded-lg"
-              key={image.id}
-              src={image.url}
-              width={250}
-              height={250}
-              alt="Imported image"
-            />
-          ))}
+        <div className="flex flex-col gap-2">
+          <p className="whitespace-pre-wrap">{content}</p>
+          <div className="flex flex-row flex-wrap gap-4">
+            {images?.map((image) => (
+              <Image
+                className="rounded-lg "
+                key={image.id}
+                src={image.url}
+                width={250}
+                height={250}
+                alt="Imported image"
+              />
+            ))}
+          </div>
         </div>
         <div className="mt-2 flex gap-8">
           <HeartButton

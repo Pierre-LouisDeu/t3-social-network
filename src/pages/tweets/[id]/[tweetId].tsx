@@ -55,7 +55,7 @@ const ProfilePage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
       <Head>
         <title>{`T3 Social Network - Tweet`}</title>
       </Head>
-      <header className="sticky top-0 z-10 flex items-center border-b bg-white p-4">
+      <header className="sticky top-0 z-10 flex items-center border-b bg-white/80 p-4 backdrop-blur">
         <Link href="/" className="mr-2">
           <IconHoverEffect>
             <VscArrowLeft className="h-6 w-6" />
@@ -100,6 +100,7 @@ const ProfilePage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
           setTweetIsLoading={setTweetIsLoading}
           hideCommentBtn
           hideDeleteBtn
+          first
         />
         <NewCommentForm tweetId={tweetId} loading={tweetIsLoading} />
         <InfiniteCommentList

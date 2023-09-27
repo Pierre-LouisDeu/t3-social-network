@@ -38,12 +38,15 @@ export type CommentCardType = {
   setTweetIsLoading?: (isLoading: boolean) => void;
   hideCommentBtn?: boolean;
   hideDeleteBtn?: boolean;
+  first?: boolean;
 };
 
 export type Comment = {
   id: string;
   tweetId: string;
   content: string;
+  images: ImageType;
   createdAt: Date;
   user: { id: string; image: string | null; name: string | null };
+  first?: boolean;
 };

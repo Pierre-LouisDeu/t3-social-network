@@ -1,5 +1,6 @@
 import { useSession } from "next-auth/react";
 import { type FormEvent } from "react";
+import { type UploadFileResponse } from "uploadthing/client";
 import { notifyError } from "~/components/common/toasts/toast";
 import { api } from "~/utils/api";
 
@@ -7,6 +8,8 @@ type UseToggleLikeProps = {
   inputValue: string;
   tweetId: string;
   setInputValue: (value: string) => void;
+  imagesUploaded: UploadFileResponse[];
+  setImagesUploaded: (images: UploadFileResponse[]) => void;
 };
 
 type UseCreateCommentType = {
@@ -18,6 +21,8 @@ export const useCreateComment = ({
   inputValue,
   tweetId,
   setInputValue,
+  imagesUploaded,
+  setImagesUploaded,
 }: UseToggleLikeProps): UseCreateCommentType => {
   const session = useSession();
   const trpcUtils = api.useContext();
@@ -28,6 +33,7 @@ export const useCreateComment = ({
     },
     onSuccess: (newComment) => {
       setInputValue("");
+      setImagesUploaded([]);
 
       if (session.status !== "authenticated") return;
 
@@ -37,6 +43,10 @@ export const useCreateComment = ({
         const newCacheComment = {
           ...newComment,
           tweetId: tweetId,
+          images: imagesUploaded.map((image) => ({
+            id: image.key,
+            url: image.url,
+          })),
           user: {
             id: session.data.user.id,
             name: session.data.user.name || null,
@@ -58,12 +68,16 @@ export const useCreateComment = ({
     },
   });
 
-  function handleCreateComment(e: FormEvent) {
+  const handleCreateComment = (e: FormEvent) => {
     e.preventDefault();
 
     createComment.mutate({
       content: inputValue,
       tweetId: tweetId,
+      images: imagesUploaded.map((image) => ({
+        id: image.key,
+        url: image.url,
+      })),
     });
   }
 

@@ -22,21 +22,11 @@ model Tweet {
     likes   Like[]
     address Address?
     comment Comment[]
-    images  Image[] 
+    images  Image[]
 
     @@unique([createdAt, id])
     @@index([userId])
     @@fulltext([content])
-}
-
-model Image {
-    id      String @id @default(uuid())
-    url     String
-    tweetId String
-
-    tweet   Tweet   @relation(fields: [tweetId], references: [id], onDelete: Cascade)
-
-    @@index([tweetId])
 }
 
 model Comment {
@@ -46,12 +36,26 @@ model Comment {
     content   String
     createdAt DateTime @default(now())
 
-    user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
-    tweet Tweet @relation(fields: [tweetId], references: [id], onDelete: Cascade)
+    user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+    tweet  Tweet   @relation(fields: [tweetId], references: [id], onDelete: Cascade)
+    images Image[]
 
     @@unique([createdAt, id])
     @@index([userId])
     @@index([tweetId])
+}
+
+model Image {
+    id      String @id @default(uuid())
+    url     String
+    tweetId String
+
+    tweet     Tweet    @relation(fields: [tweetId], references: [id], onDelete: Cascade)
+    Comment   Comment? @relation(fields: [commentId], references: [id])
+    commentId String?
+
+    @@index([tweetId])
+    @@index([commentId])
 }
 
 model Address {

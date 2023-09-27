@@ -34,6 +34,7 @@ export function InfiniteCommentList({
         next={fetchNewComments}
         hasMore={hasMore}
         loader={<LoadingSpinner />}
+        style={{ overflow: "visible" }}
       >
         {comments.map((comment) => {
           return comment && <CommentCard key={comment.id} {...comment} />;

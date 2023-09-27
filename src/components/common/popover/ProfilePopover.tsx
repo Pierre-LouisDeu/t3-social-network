@@ -2,13 +2,13 @@ import { Popover } from "@headlessui/react";
 import Link from "next/link";
 import { ProfileImage } from "~/components/common/icons/ProfileImage";
 import { getPlural } from "~/utils/utils";
-import FollowButton from "../../header/FollowButton";
+import FollowButton from "../../specific/header/FollowButton";
 import { useSession } from "next-auth/react";
 import { api } from "~/utils/api";
-import { useFollowUser } from "../hooks/useFollowUser";
+import { useFollowUser } from "../../specific/InfiniteTweetList/hooks/useFollowUser";
 import { useEffect, type Dispatch, type SetStateAction } from "react";
 
-type PopoverProifleProps = {
+type ProiflePopoverProps = {
   id: string;
   user: {
     id: string;
@@ -17,6 +17,7 @@ type PopoverProifleProps = {
   };
   popoverOpenProfile: boolean;
   setPopoverOpenProfile: Dispatch<SetStateAction<boolean>>;
+  first?: boolean;
 };
 
 export const ProfilePopover = ({
@@ -24,7 +25,8 @@ export const ProfilePopover = ({
   user,
   popoverOpenProfile,
   setPopoverOpenProfile,
-}: PopoverProifleProps) => {
+  first = false,
+}: ProiflePopoverProps) => {
   const session = useSession();
   const myId = session?.data?.user.id;
 
@@ -56,8 +58,10 @@ export const ProfilePopover = ({
       {popoverOpenProfile && profile && (
         <Popover.Panel
           onMouseLeave={() => setPopoverOpenProfile(false)}
+          className={`absolute ${
+            !first ? "bottom-full" : ""
+          } z-20 mb-2 w-52 rounded-md bg-white/80 px-3 py-2 text-xs text-gray-700 shadow-lg ring-1 ring-black ring-opacity-5 backdrop-blur-md focus:outline-none`}
           static
-          className="absolute bottom-full z-20 mb-2 w-52 rounded-md bg-white/80 px-3 py-2 text-xs text-gray-700 shadow-lg ring-1 ring-black ring-opacity-5 backdrop-blur-md focus:outline-none"
         >
           <div className="w-54 h-24">
             <div className="flex items-center gap-4">
