@@ -9,6 +9,7 @@ import { type UploadFileResponse } from "uploadthing/client";
 import Image from "next/image";
 import { MdCancel } from "react-icons/md";
 import { UploadImageButton } from "./components/UploadButton";
+import { useDeleteImages } from "../InfiniteTweetList/hooks/useDeleteImages";
 
 type NewCommentFormProps = {
   tweetId: string;
@@ -26,6 +27,7 @@ export const NewCommentForm = ({ tweetId, loading }: NewCommentFormProps) => {
 
 export const Form = ({ tweetId }: NewCommentFormProps) => {
   const [inputValue, setInputValue] = useState<string>("");
+  const { handleDeleteImages } = useDeleteImages();
   const textAreaRef = useRef<HTMLTextAreaElement>();
   const inputRef = useCallback((textArea: HTMLTextAreaElement) => {
     updateTextAreaSize(textArea);
@@ -54,6 +56,7 @@ export const Form = ({ tweetId }: NewCommentFormProps) => {
   if (session.status !== "authenticated") return null;
 
   const removeImage = (key: string) => {
+    handleDeleteImages(key);
     const updatedImages = imagesUploaded.filter((image) => image.key !== key);
     setImagesUploaded(updatedImages);
   };

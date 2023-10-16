@@ -9,6 +9,7 @@ import { UploadImageButton } from "./components/UploadButton";
 import { MdCancel } from "react-icons/md";
 import { type UploadFileResponse } from "uploadthing/client";
 import Image from "next/image";
+import { useDeleteImages } from "../InfiniteTweetList/hooks/useDeleteImages";
 
 function updateTextAreaSize(textArea?: HTMLTextAreaElement) {
   if (textArea == null) return;
@@ -26,6 +27,7 @@ export function NewTweetForm() {
 function Form() {
   const session = useSession();
   const { address } = useLocation();
+  const { handleDeleteImages } = useDeleteImages();
   const [inputValue, setInputValue] = useState<string>("");
   const [imagesUploaded, setImagesUploaded] = useState<UploadFileResponse[]>(
     []
@@ -55,6 +57,7 @@ function Form() {
   if (session.status !== "authenticated") return null;
 
   const removeImage = (key: string) => {
+    handleDeleteImages(key);
     const updatedImages = imagesUploaded.filter((image) => image.key !== key);
     setImagesUploaded(updatedImages);
   };
@@ -70,8 +73,8 @@ function Form() {
           style={{ height: 0 }}
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
-          className="flex-grow resize-none overflow-hidden border-0 border-transparent p-4 text-lg focus:ring-0"
           placeholder="What's happening?"
+          className="flex-grow resize-none overflow-hidden border-0 border-transparent p-4 text-lg focus:ring-0"
         />
       </div>
       <div className="pl-20">
@@ -87,7 +90,7 @@ function Form() {
               />
               <MdCancel
                 className="absolute right-2 top-2 h-6 w-6 cursor-pointer text-gray-700 hover:text-gray-600"
-                onClick={() => removeImage(image.key)}
+                onClick={() => void removeImage(image.key)}
               />
             </div>
           ))}

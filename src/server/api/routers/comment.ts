@@ -9,6 +9,7 @@ import {
   createTRPCContext,
 } from "~/server/api/trpc";
 import { zImage } from "~/types/commonTypes";
+import { deleteImages } from "../images/images";
 
 export const commentRouter = createTRPCRouter({
   getById: publicProcedure
@@ -58,6 +59,10 @@ export const commentRouter = createTRPCRouter({
     .mutation(async ({ input: { content, images, tweetId }, ctx }) => {
       const currentUserId = ctx.session?.user.id;
 
+      if (!content && (!images || images.length === 0)) {
+        throw new Error("A comment must have content");
+      }
+
       const comment = await ctx.prisma.comment.create({
         data: {
           content,
@@ -65,19 +70,10 @@ export const commentRouter = createTRPCRouter({
             create: images?.map((image) => ({
               id: image.id,
               url: image.url,
-              tweet: { connect: { id: tweetId } }, // TODO: remove this line and fix the issue 
             })),
           },
           tweetId,
           userId: currentUserId,
-        },
-        select: {
-          id: true,
-          content: true,
-          createdAt: true,
-          user: {
-            select: { name: true, id: true, image: true },
-          },
         },
       });
 
@@ -93,6 +89,12 @@ export const commentRouter = createTRPCRouter({
       if (!comment) {
         return { deletedComment: false };
       }
+
+      const images = await ctx.prisma.image.findMany({
+        where: { commentId: id },
+      });
+
+      await deleteImages(images);
 
       await ctx.prisma.comment.delete({ where: { id } });
       return { deletedComment: true };

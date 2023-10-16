@@ -9,6 +9,8 @@ import {
   createTRPCContext,
 } from "~/server/api/trpc";
 import { zAddress, zImage } from "~/types/commonTypes";
+import { deleteImages } from "../images/images";
+import { utapi } from "uploadthing/server";
 
 export const tweetRouter = createTRPCRouter({
   getById: publicProcedure
@@ -92,6 +94,10 @@ export const tweetRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input: { content, images, address }, ctx }) => {
+      if (!content && (!images || images.length === 0)) {
+        throw new Error("A tweet must have content");
+      }
+
       const tweet = await ctx.prisma.tweet.create({
         data: {
           content,
@@ -132,8 +138,25 @@ export const tweetRouter = createTRPCRouter({
         return { deletedTweet: false };
       }
 
+      const images = await ctx.prisma.image.findMany({
+        where: {
+          OR: [
+            { id: data.tweetId },
+            { comment: { tweet: { id: { equals: data?.tweetId } } } },
+          ],
+        },
+      });
+
+      await deleteImages(images);
+
       await ctx.prisma.tweet.delete({ where: { id: data.tweetId } });
       return { deletedTweet: true };
+    }),
+  deleteImages: protectedProcedure
+    .input(z.object({ keys: z.string().or(z.array(z.string())) }))
+    .mutation(async ({ input: { keys } }) => {
+      await utapi.deleteFiles(keys);
+      return { deletedImages: true };
     }),
   toggleLike: protectedProcedure
     .input(z.object({ id: z.string() }))

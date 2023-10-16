@@ -8,7 +8,7 @@ type InfiniteCommentListProps = {
   isLoading: boolean;
   fetchNewComments: () => Promise<unknown>;
   hasMore?: boolean;
-  comments?: Comment[] | null;
+  comments?: Comment[];
 };
 
 export function InfiniteCommentList({
